@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Pacemaker</string>
+    <string name="mode_prompt">Wähle einen Modus</string>
+
+    <string-array name="modes_array">
+        <item>Effect</item>
+        <item>Full Rainbow</item>
+        <item>Color Picker</item>
+    </string-array>
 </resources>
