@@ -10,25 +10,29 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Farbe"
-        android:textColor="#000"
-        android:layout_marginLeft="4dp"/>
+        android:padding="10dp" />
 
-    <View android:layout_width="fill_parent"
-        android:layout_height="2dip"
-        android:background="#666666" />
+    <!--<View android:layout_width="fill_parent"-->
+        <!--android:layout_height="2dip"-->
+        <!--android:background="#666666" />-->
 
     <RadioGroup
+        android:id="@+id/effect_color"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:checkedButton="@+id/button_red">
         <RadioButton
+            android:id="@+id/button_red"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="Rot"/>
         <RadioButton
+            android:id="@+id/button_green"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="Grün"/>
         <RadioButton
+            android:id="@+id/button_blue"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="Blau"/>

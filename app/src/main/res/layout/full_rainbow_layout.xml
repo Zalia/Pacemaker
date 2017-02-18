@@ -6,4 +6,32 @@
     android:layout_height="match_parent"
     android:id="@+id/full_rainbow_layout">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Schnelligkeit"
+        android:padding="10dp"/>
+    <SeekBar
+        android:id="@+id/rainbow_speed_slider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Helligkeit"
+        android:padding="10dp"/>
+    <SeekBar
+        android:id="@+id/rainbow_brightness_slider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Regenbogigkeit"
+        android:padding="10dp"/>
+    <SeekBar
+        android:id="@+id/rainbow_slider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
 </LinearLayout>

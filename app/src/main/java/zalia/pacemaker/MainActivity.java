@@ -1,71 +1,61 @@
 package zalia.pacemaker;
 
+import android.graphics.Color;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.Toast;
 import android.widget.Spinner;
 
-import com.flask.colorpicker.ColorPickerView;
-import com.flask.colorpicker.OnColorSelectedListener;
+import static android.R.attr.mode;
 
 public class MainActivity extends AppCompatActivity {
+
     private View root;
     private View modeView;
-    private int currentBackgroundColor = 0xffffffff;
+    private PacemakerMode active_mode;
 
     private Spinner spinner;
-    private ColorPickerView colorPickerView;
+    private Button commit_button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        root = findViewById(R.id.color_screen);
-        changeBackgroundColor(currentBackgroundColor);
 
+        root = findViewById(R.id.pacemaker_layout);
+
+        //setup mode selection dropdown menu
         spinner = (Spinner) findViewById(R.id.modes_dropdown);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemSelected(AdapterView<?> parent, View view, int index, long id) {
                 ViewGroup modeViewHolder = (ViewGroup)findViewById(R.id.frame_layout);
-
-                toast("handling selected item");
                 if(modeView != null){
                     modeViewHolder.removeView(modeView);
                 }
 
-                int modeViewResId;
-                switch(position){
-                    case 0: default:
-                        modeViewResId = R.layout.effect_layout;
+                //load current mode's layout
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                switch(index){
+                    case 0:
+                        active_mode = new EffectMode();
                         break;
-                    case 1:
-                        modeViewResId = R.layout.full_rainbow_layout;
+                    case 1: default:
+                        active_mode = new FullRainbowMode();
                         break;
                     case 2:
-                        modeViewResId = R.layout.color_picker_layout;
+                        active_mode = new ColorPickerMode();
                         break;
                 }
-
-                modeView = getLayoutInflater().inflate(modeViewResId, null);
-                modeViewHolder.addView(modeView);
-                if(position == 2){
-                    toast("attempting to initialize color picker");
-                    colorPickerView = (ColorPickerView) findViewById(R.id.color_picker_view);
-                    colorPickerView.addOnColorSelectedListener(new OnColorSelectedListener() {
-                        @Override
-                        public void onColorSelected(int selectedColor) {
-                            Toast.makeText(
-                                    MainActivity.this,
-                                    "selectedColor: " + Integer.toHexString(selectedColor).toUpperCase(),
-                                    Toast.LENGTH_SHORT).show();
-                            changeBackgroundColor(selectedColor);
-                        }
-                    });
-                }
+                ft.replace(R.id.frame_layout, active_mode);
+                ft.commit();
             }
 
             @Override
@@ -74,16 +64,38 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        commit_button = (Button)findViewById(R.id.commit_button);
+        commit_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String config = active_mode.generate_configs();
+                send_config(config);
+            }
+        });
+
     }
 
-    private void changeBackgroundColor(int selectedColor) {
-        currentBackgroundColor = selectedColor;
-        root.setBackgroundColor(selectedColor);
+    public void change_background(int color){
+        root.setBackgroundColor(color);
     }
 
-    private void toast(String text) {
+    //bluetooth stuff
+    private void send_config(String config){
+        toast("Config commited: '" + config + "'");
+        return;
+    }
+
+    public void toast(String text) {
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
 
+    //utility method for all fragments that use progress bars
+    public static int normalize_progress(int progress, int min, int max){
+        double dmin = min;
+        double dmax = max;
+        double dprog = progress;
+        double result = dmin + (dmax-dmin)/(100/dprog);
+        return (int) Math.round(result);
+    }
 
 }
