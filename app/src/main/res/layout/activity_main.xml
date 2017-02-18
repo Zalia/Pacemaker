@@ -59,9 +59,7 @@
         android:prompt="@string/mode_prompt"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="35dp"
-        android:spinnerMode="dropdown"
-        android:overlapAnchor="false"
-        android:backgroundTint="#000">
+        android:overlapAnchor="false">
     </Spinner>
 
     <Button

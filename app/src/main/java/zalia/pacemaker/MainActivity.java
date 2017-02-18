@@ -29,9 +29,8 @@ import static android.R.id.message;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "Pacemaker";
-
     private static final UUID HEARTBEAT_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
-    private static String heartbeat_mac = "00:00:00:00:00:00";
+    private static String heartbeat_mac = "98:D3:31:FB:21:45";
     private BluetoothAdapter btAdapter = null;
     private BluetoothSocket btSocket = null;
     private OutputStream outStream = null;
@@ -195,10 +194,7 @@ public class MainActivity extends AppCompatActivity {
                 outStream.write(msgBuffer);
             } catch (IOException e) {
                 String msg = "In onResume() and an exception occurred during write: " + e.getMessage();
-                if (heartbeat_mac.equals("00:00:00:00:00:00"))
-                    msg = msg + ".\n\nUpdate your server address from 00:00:00:00:00:00 to the correct address on line 37 in the java code";
                 msg = msg +  ".\n\nCheck that the SPP UUID: " + HEARTBEAT_UUID.toString() + " exists on server.\n\n";
-
                 errorExit("Fatal Error", msg);
             }
         } catch(NullPointerException e){
