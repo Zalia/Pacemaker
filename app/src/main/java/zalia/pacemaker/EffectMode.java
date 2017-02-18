@@ -79,6 +79,6 @@ public class EffectMode extends PacemakerMode {
 
     @Override
     public String generate_configs() {
-        return mirror + "fillcolor:" + active_color;
+        return mirror + "fillcolour:" + active_color + "\n";
     }
 }

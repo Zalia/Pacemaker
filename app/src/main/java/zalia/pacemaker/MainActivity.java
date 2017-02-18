@@ -80,8 +80,7 @@ public class MainActivity extends AppCompatActivity {
         commit_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String config = active_mode.generate_configs();
-                send_config(config);
+                send_config(active_mode.generate_configs());
             }
         });
 

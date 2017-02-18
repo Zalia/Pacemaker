@@ -46,6 +46,6 @@ public class ColorPickerMode extends PacemakerMode {
 
     @Override
     public String generate_configs() {
-        return "colorwheel: " + current_color;
+        return "colorwheel: " + current_color + "\n";
     }
 }
