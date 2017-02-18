@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Pacemaker</string>
     <string name="mode_prompt">Wähle einen Modus</string>
+    <string name="commit">Übernehmen</string>
 
     <string-array name="modes_array">
         <item>Effect</item>

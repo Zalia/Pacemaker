@@ -28,6 +28,7 @@ public class ColorPickerMode extends PacemakerMode {
     public void onViewCreated(View view, Bundle savedInstanceState){
         //default settings
         current_color = Color.WHITE;
+        change_background(current_color);
 
         //setup listeners
         colorPickerView = (ColorPickerView) view.findViewById(R.id.color_picker_view);
@@ -40,7 +41,7 @@ public class ColorPickerMode extends PacemakerMode {
     }
 
     private void change_background(int color){
-        ((MainActivity)getActivity()).change_background(color);
+        ((MainActivity)getActivity()).findViewById(R.id.pacemaker_layout).setBackgroundColor(color);
     }
 
     @Override

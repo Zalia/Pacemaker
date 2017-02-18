@@ -10,28 +10,50 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Schnelligkeit"
+        android:textColor="#FFF"
         android:padding="10dp"/>
     <SeekBar
         android:id="@+id/rainbow_speed_slider"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:thumbTint="#FFF"
+        android:progressTint="#00000000"
+        android:progressBackgroundTint="#FFF" />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Helligkeit"
+        android:textColor="#FFF"
         android:padding="10dp"/>
     <SeekBar
         android:id="@+id/rainbow_brightness_slider"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:thumbTint="#FFF"
+        android:progressTint="#00000000"
+        android:progressBackgroundTint="#FFF" />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Regenbogigkeit"
+        android:textColor="#FFF"
         android:padding="10dp"/>
     <SeekBar
         android:id="@+id/rainbow_slider"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:thumbTint="#FFF"
+        android:progressTint="#00000000"
+        android:progressBackgroundTint="#FFF" />
+
+    <CheckBox
+        android:id="@+id/mirror_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Effekt spiegeln"
+        android:buttonTint="#FFF"
+        android:textColor="#FFF"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="3dp"/>
 
 </LinearLayout>

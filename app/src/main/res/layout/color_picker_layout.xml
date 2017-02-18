@@ -13,17 +13,17 @@
     android:gravity="left"
     android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Farbe"
-        android:layout_marginTop="5dp"
-        android:textColor="#000"
-        android:layout_marginLeft="4dp"/>
+    <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Farbe"-->
+        <!--android:layout_marginTop="5dp"-->
+        <!--android:textColor="#000"-->
+        <!--android:layout_marginLeft="4dp"/>-->
 
-    <View android:layout_width="fill_parent"
-        android:layout_height="2dip"
-        android:background="#666666" />
+    <!--<View android:layout_width="fill_parent"-->
+        <!--android:layout_height="2dip"-->
+        <!--android:background="#666666" />-->
 
     <com.flask.colorpicker.ColorPickerView
         android:id="@+id/color_picker_view"

@@ -10,7 +10,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Farbe"
-        android:padding="10dp" />
+        android:textColor="#FFF"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="5dp"/>
 
     <!--<View android:layout_width="fill_parent"-->
         <!--android:layout_height="2dip"-->
@@ -25,17 +27,31 @@
             android:id="@+id/button_red"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Rot"/>
+            android:text="Rot"
+            android:textColor="#FFF"
+            android:buttonTint="#FFF"/>
         <RadioButton
             android:id="@+id/button_green"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Grün"/>
+            android:text="Grün"
+            android:textColor="#FFF"
+            android:buttonTint="#FFF"/>
         <RadioButton
             android:id="@+id/button_blue"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Blau"/>
+            android:text="Blau"
+            android:textColor="#FFF"
+            android:buttonTint="#FFF"/>
     </RadioGroup>
+    <CheckBox
+        android:id="@+id/mirror_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Effekt spiegeln"
+        android:textColor="#FFF"
+        android:buttonTint="#FFF"
+        android:layout_marginTop="20dp"/>
 
 </LinearLayout>

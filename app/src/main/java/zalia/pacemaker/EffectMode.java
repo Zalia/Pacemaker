@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.RadioGroup;
 
 /**
@@ -15,7 +17,7 @@ public class EffectMode extends PacemakerMode {
 
     View root;
     RadioGroup radio_group;
-    String active_color;
+    String active_color, mirror;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
@@ -26,6 +28,7 @@ public class EffectMode extends PacemakerMode {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         //default settings
         active_color = "r";
+        mirror = "";
 
         change_background(active_color);
 
@@ -48,6 +51,14 @@ public class EffectMode extends PacemakerMode {
                 change_background(active_color);
             }
         });
+
+        CheckBox mirror_box = (CheckBox) view.findViewById(R.id.mirror_button);
+        mirror_box.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mirror = isChecked ? "split:" : "";
+            }
+        });
     }
 
     private void change_background(String color){
@@ -63,11 +74,11 @@ public class EffectMode extends PacemakerMode {
                 c = Color.BLUE;
                 break;
         }
-        ((MainActivity)getActivity()).change_background(c);
+        ((MainActivity)getActivity()).findViewById(R.id.pacemaker_layout).setBackgroundColor(c);
     }
 
     @Override
     public String generate_configs() {
-        return "fillcolor:" + active_color;
+        return mirror + "fillcolor:" + active_color;
     }
 }

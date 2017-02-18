@@ -1,11 +1,14 @@
 package zalia.pacemaker;
 
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.SeekBar;
 
 import static zalia.pacemaker.MainActivity.normalize_progress;
@@ -23,10 +26,8 @@ public class FullRainbowMode extends PacemakerMode {
     private static final int MIN_RAINBOWNESS = 0;
     private static final int MAX_RAINBOWNESS = 10;
 
-    private SeekBar speed_bar;
-    private SeekBar brightness_bar;
-    private SeekBar rainbow_bar;
     private int speed, brightness, rainbowness;
+    private String mirror;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
@@ -39,11 +40,12 @@ public class FullRainbowMode extends PacemakerMode {
         speed = MIN_SPEED;
         brightness = MIN_BRIGHTNESS;
         rainbowness = MIN_RAINBOWNESS;
+        mirror = "";
 
-        change_background(Color.WHITE);
+        change_background();
 
         //setup listeners
-        speed_bar = (SeekBar) view.findViewById(R.id.rainbow_speed_slider);
+        SeekBar speed_bar = (SeekBar) view.findViewById(R.id.rainbow_speed_slider);
         speed_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -55,7 +57,7 @@ public class FullRainbowMode extends PacemakerMode {
             public void onStopTrackingTouch(SeekBar seekBar) {}
         });
 
-        brightness_bar = (SeekBar) view.findViewById(R.id.rainbow_brightness_slider);
+        SeekBar brightness_bar = (SeekBar) view.findViewById(R.id.rainbow_brightness_slider);
         brightness_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -67,7 +69,7 @@ public class FullRainbowMode extends PacemakerMode {
             public void onStopTrackingTouch(SeekBar seekBar) {}
         });
 
-        rainbow_bar = (SeekBar) view.findViewById(R.id.rainbow_slider);
+        SeekBar rainbow_bar = (SeekBar) view.findViewById(R.id.rainbow_slider);
         rainbow_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -78,13 +80,23 @@ public class FullRainbowMode extends PacemakerMode {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {}
         });
+
+        CheckBox mirror_box = (CheckBox) view.findViewById(R.id.mirror_button);
+        mirror_box.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mirror = isChecked ? "split:" : "";
+            }
+        });
     }
 
-    private void change_background(int color){
-        ((MainActivity)getActivity()).change_background(color);
+    private void change_background(){
+        GradientDrawable rainbow = new GradientDrawable(GradientDrawable.Orientation.TL_BR,
+                new int[] {Color.YELLOW, Color.RED, Color.MAGENTA, Color.BLUE, Color.CYAN, Color.GREEN, Color.YELLOW, Color.RED });
+        ((MainActivity)getActivity()).findViewById(R.id.pacemaker_layout).setBackground(rainbow);
     }
 
     public String generate_configs() {
-        return "rainbow:" + speed + " " + rainbowness;
+        return  mirror + "rainbow:" + speed + " " + rainbowness;
     }
 }
