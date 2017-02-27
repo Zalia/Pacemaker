@@ -29,6 +29,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import static android.R.attr.data;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -117,22 +119,58 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause(){
         super.onPause();
+        Log.d(TAG, "in onPause() ...");
         try{
             btAdapter.cancelDiscovery();
         }catch(Exception e){
-            Log.d(TAG, "Exception while attempting to cancle discovery: " + e);
+            Log.d(TAG, "Exception while attempting to cancel discovery. It propably was not active in which case everything is fine.");
+        }
+        try{
+            discovered_dialog.dismiss();
+        }catch(NullPointerException npe){
+            Log.d(TAG, "Exception while attempting to dismiss discovery dialog. It propably was not active in which case everything is fine.");
+        }
+        try{
+            paired_dialog.dismiss();
+        }catch(Exception e){
+            Log.d(TAG, "Exception while attempting to dismiss paired devices dialog. It propably was not active in which case everything is fine.");
+        }
+        try{
+            progress.dismiss();
+        }catch(Exception e){
+            Log.d(TAG, "Exception while attempting to dismiss processing dialog. It propably was not active in which case everything is fine.");
         }
     }
 
     @Override
     public void onDestroy() {
+        super.onDestroy();
         try {
             unregisterReceiver(bt_scan_receiver);
         }
         catch(Exception e){
-            Log.d(TAG, "Failed to unregister Bluetooth Scan receiver. It propably was not active.");
+            Log.d(TAG, "Failed to unregister Bluetooth Scan receiver. It propably was not active in which case everything is fine.");
         }
-        super.onDestroy();
+        try{
+            btAdapter.cancelDiscovery();
+        }catch(Exception e){
+            Log.d(TAG, "Exception while attempting to cancel discovery. It propably was not active in which case everything is fine.");
+        }
+        try{
+            discovered_dialog.dismiss();
+        }catch(NullPointerException npe){
+            Log.d(TAG, "Exception while attempting to dismiss discovery dialog. It propably was not active in which case everything is fine.");
+        }
+        try{
+            paired_dialog.dismiss();
+        }catch(Exception e){
+            Log.d(TAG, "Exception while attempting to dismiss paired devices dialog. It propably was not active in which case everything is fine.");
+        }
+        try{
+            progress.dismiss();
+        }catch(Exception e){
+            Log.d(TAG, "Exception while attempting to dismiss processing dialog. It propably was not active in which case everything is fine.");
+        }
     }
 
     //handle results from bluetooth activation prompt and initiate connection if possible
@@ -176,6 +214,16 @@ public class MainActivity extends AppCompatActivity {
             protected void onPostExecute(Boolean isConnected) {
                 if(isConnected){
                     toast("Verbindung erfolgreich hergestellt.");
+                    try{
+                        discovered_dialog.dismiss();
+                    }catch(NullPointerException npe){
+                        Log.d(TAG, "Exception while attempting to dismiss discovery dialog. It propably was not active in which case everything is fine.");
+                    }
+                    try{
+                        paired_dialog.dismiss();
+                    }catch(Exception e){
+                        Log.d(TAG, "Exception while attempting to dismiss paired devices dialog. It propably was not active in which case everything is fine.");
+                    }
                     enableCommit();
                 }else{
                     toast("Verbindungsversuch fehlgeschlagen.");
@@ -405,6 +453,7 @@ public class MainActivity extends AppCompatActivity {
         //setup commit button
         Button commit_button = (Button) findViewById(R.id.commit_button);
         commit_button.setText(R.string.connect);
+        toast("Set button text to 'Verbinden'");
         commit_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -417,6 +466,7 @@ public class MainActivity extends AppCompatActivity {
     private void enableCommit() {
         Button commit_button = (Button) findViewById(R.id.commit_button);
         commit_button.setText(R.string.commit);
+        toast("Set button text to 'Übernehmen'");
         commit_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
