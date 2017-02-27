@@ -429,6 +429,9 @@ public class MainActivity extends AppCompatActivity {
                     } else{
                         arrayOfFoundBTDevices.add(device.getName() + " / " + device.getAddress());
                     }
+                } else if (BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
+                    disableCommit();
+                    toast("Bluetooth Verbindung wurde getrennt.");
                 }
             }
         };
@@ -436,6 +439,7 @@ public class MainActivity extends AppCompatActivity {
         IntentFilter filter = new IntentFilter();
         filter.addAction(BluetoothDevice.ACTION_FOUND);
         filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+        filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
         registerReceiver(bt_scan_receiver, filter);
         bt_discover();
     }
@@ -453,7 +457,7 @@ public class MainActivity extends AppCompatActivity {
         //setup commit button
         Button commit_button = (Button) findViewById(R.id.commit_button);
         commit_button.setText(R.string.connect);
-        toast("Set button text to 'Verbinden'");
+//        toast("Set button text to 'Verbinden'");
         commit_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -466,34 +470,25 @@ public class MainActivity extends AppCompatActivity {
     private void enableCommit() {
         Button commit_button = (Button) findViewById(R.id.commit_button);
         commit_button.setText(R.string.commit);
-        toast("Set button text to 'Übernehmen'");
+//        toast("Set button text to 'Übernehmen'");
         commit_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //just in case BT connection broke while the app was open
-                if(btSocket.isConnected()) {
-                    send_config(active_mode.generate_configs());
-                } else{
-                    checkBTState();
-                }
+                send_config(active_mode.generate_configs());
             }
         });
     }
 
     //send the config string of the currently active PacemakerMode via bluetooth to the heartbeat device
     private void send_config(String config) {
-        toast("Config commited: '" + config + "'");
+        toast("Config gesendet: '" + config + "'");
         try {
             byte[] msgBuffer = config.getBytes();
-
-            Log.d(TAG, "...Sending data: " + config + "...");
-
             try {
                 outStream.write(msgBuffer);
             } catch (IOException e) {
-                String msg = "In onResume() and an exception occurred during write: " + e.getMessage();
-                msg = msg + ".\n\nCheck that the SPP UUID: " + HEARTBEAT_UUID.toString() + " exists on server.\n\n";
-                toast("Fatal Error" + msg);
+                toast("Fatal Error: " + e.getMessage());
             }
         } catch (NullPointerException e) {
             toast("Fatal Error: Bluetooth not active or not supported");
@@ -502,7 +497,7 @@ public class MainActivity extends AppCompatActivity {
 
     //display debug mesages on the device
     public void toast(String text) {
-        Log.d(TAG, text);
+        Log.d("Toast", text);
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
 
