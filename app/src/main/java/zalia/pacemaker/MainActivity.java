@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private int REQUEST_ENABLE_BT = 87;
     private static final String TAG = "Pacemaker";
     private static final UUID HEARTBEAT_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
-    private static final boolean ONLY_SHHOW_HEARTBEAT_DEVICES = true;
+    private static final boolean ONLY_SHHOW_HEARTBEAT_DEVICES = false;
 //    private String heartbeat_mac = "98:D3:31:FB:21:45";
     private String heartbeat_mac = null;
     private BluetoothAdapter btAdapter = null;
