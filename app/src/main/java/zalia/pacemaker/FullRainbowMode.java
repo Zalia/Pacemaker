@@ -2,7 +2,6 @@ package zalia.pacemaker;
 
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +27,7 @@ public class FullRainbowMode extends PacemakerMode {
 
     private int speed, brightness, rainbowness;
     private String mirror;
+    private boolean initialized = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
@@ -36,58 +36,72 @@ public class FullRainbowMode extends PacemakerMode {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState){
-        //default config
-        speed = MIN_SPEED;
-        brightness = MIN_BRIGHTNESS;
-        rainbowness = MIN_RAINBOWNESS;
-        mirror = "";
-
         change_background();
+        if(!initialized) {
+            //default config
+            speed = MIN_SPEED;
+            brightness = MIN_BRIGHTNESS;
+            rainbowness = MIN_RAINBOWNESS;
+            mirror = "";
 
-        //setup listeners
-        SeekBar speed_bar = (SeekBar) view.findViewById(R.id.rainbow_speed_slider);
-        speed_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                speed = normalize_progress(progress, MIN_SPEED, MAX_SPEED);
-            }
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {}
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {}
-        });
+            //setup listeners
+            SeekBar speed_bar = (SeekBar) view.findViewById(R.id.rainbow_speed_slider);
+            speed_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    speed = normalize_progress(progress, MIN_SPEED, MAX_SPEED);
+                }
 
-        SeekBar brightness_bar = (SeekBar) view.findViewById(R.id.rainbow_brightness_slider);
-        brightness_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                brightness = normalize_progress(progress, MIN_BRIGHTNESS, MAX_BRIGHTNESS);
-            }
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {}
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {}
-        });
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                }
 
-        SeekBar rainbow_bar = (SeekBar) view.findViewById(R.id.rainbow_slider);
-        rainbow_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                rainbowness = MainActivity.normalize_progress(progress, MIN_RAINBOWNESS, MAX_RAINBOWNESS);
-            }
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {}
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {}
-        });
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                }
+            });
 
-        CheckBox mirror_box = (CheckBox) view.findViewById(R.id.mirror_button);
-        mirror_box.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                mirror = isChecked ? "split:" : "";
-            }
-        });
+            SeekBar brightness_bar = (SeekBar) view.findViewById(R.id.rainbow_brightness_slider);
+            brightness_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    brightness = normalize_progress(progress, MIN_BRIGHTNESS, MAX_BRIGHTNESS);
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                }
+            });
+
+            SeekBar rainbow_bar = (SeekBar) view.findViewById(R.id.rainbow_slider);
+            rainbow_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    rainbowness = MainActivity.normalize_progress(progress, MIN_RAINBOWNESS, MAX_RAINBOWNESS);
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                }
+            });
+
+            CheckBox mirror_box = (CheckBox) view.findViewById(R.id.mirror_button);
+            mirror_box.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    mirror = isChecked ? "split:" : "";
+                }
+            });
+            initialized = true;
+        }
     }
 
     private void change_background(){

@@ -15,9 +15,10 @@ import android.widget.RadioGroup;
 
 public class EffectMode extends PacemakerMode {
 
-    View root;
-    RadioGroup radio_group;
-    String active_color, mirror;
+    private View root;
+    private RadioGroup radio_group;
+    private String active_color, mirror;
+    private boolean initialized = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
@@ -26,39 +27,45 @@ public class EffectMode extends PacemakerMode {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        //default settings
-        active_color = "r";
-        mirror = "";
+        if(!initialized) {
+            //default settings
+            active_color = "r";
+            mirror = "";
 
-        change_background(active_color);
+            change_background(active_color);
 
-        //setup listeners
-        radio_group = (RadioGroup) view.findViewById(R.id.effect_color);
-        radio_group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch(checkedId){
-                    case R.id.button_red: default:
-                        active_color = "r";
-                        break;
-                    case R.id.button_green:
-                        active_color = "g";
-                        break;
-                    case R.id.button_blue:
-                        active_color = "b";
-                        break;
+            //setup listeners
+            radio_group = (RadioGroup) view.findViewById(R.id.effect_color);
+            radio_group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup group, int checkedId) {
+                    switch (checkedId) {
+                        case R.id.button_red:
+                        default:
+                            active_color = "r";
+                            break;
+                        case R.id.button_green:
+                            active_color = "g";
+                            break;
+                        case R.id.button_blue:
+                            active_color = "b";
+                            break;
+                    }
+                    change_background(active_color);
                 }
-                change_background(active_color);
-            }
-        });
+            });
 
-        CheckBox mirror_box = (CheckBox) view.findViewById(R.id.mirror_button);
-        mirror_box.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                mirror = isChecked ? "split:" : "";
-            }
-        });
+            CheckBox mirror_box = (CheckBox) view.findViewById(R.id.mirror_button);
+            mirror_box.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    mirror = isChecked ? "split:" : "";
+                }
+            });
+            initialized = true;
+        } else{
+            change_background(active_color);
+        }
     }
 
     private void change_background(String color){

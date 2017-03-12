@@ -2,6 +2,7 @@ package zalia.pacemaker;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ public class ColorPickerMode extends PacemakerMode {
     private ColorPickerView colorPickerView;
     private View root;
     private int current_color;
+    private boolean initialized = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
@@ -26,18 +28,24 @@ public class ColorPickerMode extends PacemakerMode {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState){
-        //default settings
-        current_color = Color.WHITE;
-        change_background(current_color);
+        if(!initialized) {
+            //default settings
+            current_color = Color.WHITE;
+            change_background(current_color);
 
-        //setup listeners
-        colorPickerView = (ColorPickerView) view.findViewById(R.id.color_picker_view);
-        colorPickerView.addOnColorSelectedListener(new OnColorSelectedListener() {
-            @Override
-            public void onColorSelected(int selectedColor) {
-                change_background(selectedColor);
-            }
-        });
+            //setup listeners
+            colorPickerView = (ColorPickerView) view.findViewById(R.id.color_picker_view);
+            colorPickerView.addOnColorSelectedListener(new OnColorSelectedListener() {
+                @Override
+                public void onColorSelected(int selectedColor) {
+                    current_color = selectedColor;
+                    change_background(selectedColor);
+                }
+            });
+            initialized = true;
+        } else{
+            change_background(current_color);
+        }
     }
 
     private void change_background(int color){

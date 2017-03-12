@@ -52,6 +52,11 @@ public class MainActivity extends AppCompatActivity {
     private BroadcastReceiver bt_scan_receiver = null;
 
     private PacemakerMode active_mode;
+    //keep references to each mode to keep configurations
+    private CreativeMode creative_mode;
+    private EffectMode effect_mode;
+    private FullRainbowMode rainbow_mode;
+    private ColorPickerMode color_picker_mode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,14 +73,21 @@ public class MainActivity extends AppCompatActivity {
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 switch (index) {
                     case 0:
-                        active_mode = new EffectMode();
+                        if(effect_mode == null) effect_mode = new EffectMode();
+                        active_mode = effect_mode;
                         break;
                     case 1:
                     default:
-                        active_mode = new FullRainbowMode();
+                        if(rainbow_mode == null) rainbow_mode = new FullRainbowMode();
+                        active_mode = rainbow_mode;
                         break;
                     case 2:
-                        active_mode = new ColorPickerMode();
+                        if(color_picker_mode == null) color_picker_mode = new ColorPickerMode();
+                        active_mode = color_picker_mode;
+                        break;
+                    case 3:
+                        if(creative_mode == null) creative_mode = new CreativeMode();
+                        active_mode = creative_mode;
                         break;
                 }
                 ft.replace(R.id.frame_layout, active_mode);
@@ -481,7 +493,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //send the config string of the currently active PacemakerMode via bluetooth to the heartbeat device
-    private void send_config(String config) {
+    public void send_config(String config) {
         toast("Config gesendet: '" + config + "'");
         try {
             byte[] msgBuffer = config.getBytes();
