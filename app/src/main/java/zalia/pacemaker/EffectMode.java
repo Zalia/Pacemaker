@@ -88,4 +88,5 @@ public class EffectMode extends PacemakerMode {
     public String generate_configs() {
         return mirror + "fillcolour:" + active_color + "\n";
     }
+
 }

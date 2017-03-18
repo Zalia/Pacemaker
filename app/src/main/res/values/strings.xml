@@ -5,9 +5,10 @@
     <string name="connect">Verbinden</string>
 
     <string-array name="modes_array">
-        <item>Effect</item>
-        <item>Full Rainbow</item>
-        <item>Color Picker</item>
+        <item>Konstant</item>
+        <item>Regenbogen</item>
+        <item>Meteor</item>
+        <item>Test Mode</item>
         <item>Creative Mode</item>
     </string-array>
 </resources>

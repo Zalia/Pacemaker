@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.ParcelUuid;
 import android.support.v4.app.FragmentTransaction;
@@ -28,8 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-
-import static android.R.attr.data;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -53,10 +52,11 @@ public class MainActivity extends AppCompatActivity {
 
     private PacemakerMode active_mode;
     //keep references to each mode to keep configurations
-    private CreativeMode creative_mode;
-    private EffectMode effect_mode;
-    private FullRainbowMode rainbow_mode;
     private ColorPickerMode color_picker_mode;
+    private FullRainbowMode rainbow_mode;
+    private MeteorMode comet_mode;
+    private EffectMode effect_mode;
+    private CreativeMode creative_mode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,21 +72,33 @@ public class MainActivity extends AppCompatActivity {
                 //load current mode's layout
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 switch (index) {
+                    default:
                     case 0:
-                        if(effect_mode == null) effect_mode = new EffectMode();
-                        active_mode = effect_mode;
+                        //"Konstant"
+//                        if(color_picker_mode == null) color_picker_mode = new ColorPickerMode();
+                        color_picker_mode = new ColorPickerMode();
+                        active_mode = color_picker_mode;
                         break;
                     case 1:
-                    default:
+                        //"Regenbogen"
                         if(rainbow_mode == null) rainbow_mode = new FullRainbowMode();
                         active_mode = rainbow_mode;
                         break;
                     case 2:
-                        if(color_picker_mode == null) color_picker_mode = new ColorPickerMode();
-                        active_mode = color_picker_mode;
+                        //"Komet"
+//                        if(comet_mode == null) comet_mode = new MeteorMode();
+                        comet_mode = new MeteorMode();
+                        active_mode = comet_mode;
                         break;
                     case 3:
-                        if(creative_mode == null) creative_mode = new CreativeMode();
+                        //"Test Mode"
+                        if(effect_mode == null) effect_mode = new EffectMode();
+                        active_mode = effect_mode;
+                        break;
+                    case 4:
+                        //"Creative Mode"
+//                        if(creative_mode == null) creative_mode = new CreativeMode();
+                        creative_mode = new CreativeMode();
                         active_mode = creative_mode;
                         break;
                 }
@@ -493,7 +505,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //send the config string of the currently active PacemakerMode via bluetooth to the heartbeat device
-    public void send_config(String config) {
+    protected void send_config(String config) {
         toast("Config gesendet: '" + config + "'");
         try {
             byte[] msgBuffer = config.getBytes();
@@ -507,14 +519,20 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //returns black if color is light and white if color is dark
+    protected int find_viable_ui_color(int color){
+        double y = (299 * Color.red(color) + 587 * Color.green(color) + 114 * Color.blue(color)) / 1000;
+        return y >= 128 ? Color.BLACK : Color.WHITE;
+    }
+
     //display debug mesages on the device
-    public void toast(String text) {
+    protected void toast(String text) {
         Log.d("Toast", text);
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
 
     //utility method for all fragments that use progress bars
-    public static int normalize_progress(int progress, int min, int max) {
+    protected static int normalize_progress(int progress, int min, int max) {
         double result = (double) min + ((double) max - (double) min) / (100 / (double) progress);
         return (int) Math.round(result);
     }

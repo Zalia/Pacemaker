@@ -113,4 +113,5 @@ public class FullRainbowMode extends PacemakerMode {
     public String generate_configs() {
         return  mirror + "rainbow:" + speed + " " + rainbowness + "\n";
     }
+
 }

@@ -65,6 +65,7 @@ public class CreativeMode extends PacemakerMode {
                     ColorPickerDialogBuilder
                             .with(v.getContext())
                             .setTitle("Farbe wählen:")
+                            .lightnessSliderOnly()
                             .initialColor(active_color)
                             .wheelType(ColorPickerView.WHEEL_TYPE.FLOWER)
                             .density(12)
@@ -140,4 +141,5 @@ public class CreativeMode extends PacemakerMode {
     public String generate_configs() {
         return null;
     }
+
 }

@@ -44,14 +44,20 @@
 
     <Spinner
         android:id="@+id/modes_dropdown"
+        style="@style/Widget.AppCompat.DropDownItem.Spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:entries="@array/modes_array"
         android:prompt="@string/mode_prompt"
         android:layout_centerHorizontal="true"
-        android:layout_margin="20dp"
+        android:layout_margin="15dp"
+        android:paddingLeft="3dp"
+        android:paddingRight="3dp"
+        android:paddingBottom="6dp"
+        android:paddingTop="6dp"
         android:overlapAnchor="false"
-        android:layout_alignParentTop="true">
+        android:layout_alignParentTop="true"
+        android:background="@drawable/rounded_corners_background">
     </Spinner>
 
     <View
@@ -97,12 +103,15 @@
     <Button
         android:id="@+id/commit_button"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:layout_margin="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         android:text="@string/commit"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:background="@drawable/rounded_corners_background"/>
 
     <!--</RelativeLayout>-->
 </RelativeLayout>

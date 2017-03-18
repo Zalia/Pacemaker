@@ -34,7 +34,15 @@
         app:density="12"
         app:lightnessSlider="true"
         app:wheelType="FLOWER"
-        app:lightnessSliderView="@+id/v_alpha_slider"
+        app:lightnessSliderView="@+id/color_picker_lightness"
+        />
+    <com.flask.colorpicker.slider.LightnessSlider
+        android:id="@id/color_picker_lightness"
+        android:layout_width="match_parent"
+        android:layout_height="16dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         />
 
 </LinearLayout>

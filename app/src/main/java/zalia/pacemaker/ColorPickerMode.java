@@ -1,5 +1,6 @@
 package zalia.pacemaker;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,7 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.flask.colorpicker.ColorPickerView;
+import com.flask.colorpicker.OnColorChangedListener;
 import com.flask.colorpicker.OnColorSelectedListener;
+import com.flask.colorpicker.slider.LightnessSlider;
 
 /**
  * Created by Zalia on 17.02.2017.
@@ -17,6 +20,7 @@ import com.flask.colorpicker.OnColorSelectedListener;
 public class ColorPickerMode extends PacemakerMode {
 
     private ColorPickerView colorPickerView;
+    private LightnessSlider lightness_slider;
     private View root;
     private int current_color;
     private boolean initialized = false;
@@ -35,25 +39,30 @@ public class ColorPickerMode extends PacemakerMode {
 
             //setup listeners
             colorPickerView = (ColorPickerView) view.findViewById(R.id.color_picker_view);
-            colorPickerView.addOnColorSelectedListener(new OnColorSelectedListener() {
+            lightness_slider = (LightnessSlider) view.findViewById(R.id.color_picker_lightness);
+            colorPickerView.addOnColorChangedListener(new OnColorChangedListener() {
                 @Override
-                public void onColorSelected(int selectedColor) {
+                public void onColorChanged(int selectedColor) {
                     current_color = selectedColor;
                     change_background(selectedColor);
                 }
             });
+            colorPickerView.setLightnessSlider(lightness_slider);
+            lightness_slider.setColorPicker(colorPickerView);
+            lightness_slider.setColor(colorPickerView.getSelectedColor());
             initialized = true;
         } else{
             change_background(current_color);
         }
     }
 
-    private void change_background(int color){
+    protected void change_background(int color){
         ((MainActivity)getActivity()).findViewById(R.id.pacemaker_layout).setBackgroundColor(color);
     }
 
     @Override
     public String generate_configs() {
-        return "colorwheel: " + current_color + "\n";
+        return "constant: " + current_color + "\n";
     }
+
 }
