@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:fadeScrollbars="false"
+    android:layout_centerVertical="true">
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -11,7 +20,9 @@
     android:layout_centerHorizontal="false"
     android:layout_centerVertical="false"
     android:gravity="center"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp">
 
     <!--<TextView-->
         <!--android:layout_width="wrap_content"-->
@@ -25,7 +36,7 @@
         <!--android:layout_height="2dip"-->
         <!--android:background="#666666" />-->
 
-    <com.flask.colorpicker.ColorPickerView
+    <zalia.pacemaker.CustomColorPickerView
         android:id="@+id/color_picker_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -40,9 +51,11 @@
         android:id="@id/color_picker_lightness"
         android:layout_width="match_parent"
         android:layout_height="16dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="-5dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         />
 
 </LinearLayout>
+</ScrollView>
+</RelativeLayout>
