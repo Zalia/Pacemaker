@@ -8,6 +8,6 @@ import android.support.v4.app.Fragment;
 
 public abstract class PacemakerMode extends Fragment {
 
-    public abstract String generate_configs();
+    public abstract void send_configs();
 
 }

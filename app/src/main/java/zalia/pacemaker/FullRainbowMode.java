@@ -50,6 +50,7 @@ public class FullRainbowMode extends PacemakerMode {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                     speed = normalize_progress(progress, MIN_SPEED, MAX_SPEED);
+                    send_configs();
                 }
 
                 @Override
@@ -66,6 +67,7 @@ public class FullRainbowMode extends PacemakerMode {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                     brightness = normalize_progress(progress, MIN_BRIGHTNESS, MAX_BRIGHTNESS);
+                    send_configs();
                 }
 
                 @Override
@@ -82,6 +84,7 @@ public class FullRainbowMode extends PacemakerMode {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                     rainbowness = MainActivity.normalize_progress(progress, MIN_RAINBOWNESS, MAX_RAINBOWNESS);
+                    send_configs();
                 }
 
                 @Override
@@ -98,6 +101,7 @@ public class FullRainbowMode extends PacemakerMode {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     mirror = isChecked ? "split:" : "";
+                    send_configs();
                 }
             });
             initialized = true;
@@ -110,8 +114,8 @@ public class FullRainbowMode extends PacemakerMode {
         ((MainActivity)getActivity()).findViewById(R.id.pacemaker_layout).setBackground(rainbow);
     }
 
-    public String generate_configs() {
-        return  mirror + "rainbow:" + speed + " " + rainbowness + "\n";
+    public void send_configs() {
+        ((MainActivity)getActivity()).send_config(mirror + "rainbow:" + speed + " " + rainbowness + "\n");
     }
 
 }

@@ -36,6 +36,12 @@
     <!--android:layout_height="2dip"-->
     <!--android:background="#666666" />-->
 
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_corners_background"
+        android:layout_marginTop="20dp">
+
     <zalia.pacemaker.CustomColorPickerView
         android:id="@+id/color_picker_view"
         android:layout_width="wrap_content"
@@ -55,8 +61,10 @@
         android:layout_marginTop="15dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:layout_height="16dp"
+        android:layout_height="48dp"
+        android:layout_below="@id/color_picker_view"
         />
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/meteor_speed_text"

@@ -52,6 +52,7 @@ public class EffectMode extends PacemakerMode {
                             break;
                     }
                     change_background(active_color);
+                    send_configs();
                 }
             });
 
@@ -60,6 +61,7 @@ public class EffectMode extends PacemakerMode {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     mirror = isChecked ? "split:" : "";
+                    send_configs();
                 }
             });
             initialized = true;
@@ -85,8 +87,8 @@ public class EffectMode extends PacemakerMode {
     }
 
     @Override
-    public String generate_configs() {
-        return mirror + "fillcolour:" + active_color + "\n";
+    public void send_configs() {
+        ((MainActivity)getActivity()).send_config(mirror + "fillcolour:" + active_color + "\n");
     }
 
 }

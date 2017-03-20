@@ -51,6 +51,7 @@ public class MeteorMode extends ColorPickerMode {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 speed = normalize_progress(progress, MIN_SPEED, MAX_SPEED);
+                send_configs();
             }
 
             @Override
@@ -68,6 +69,7 @@ public class MeteorMode extends ColorPickerMode {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 length = normalize_progress(progress, MIN_LENGTH, MAX_LENGTH);
+                send_configs();
             }
 
             @Override
@@ -85,6 +87,7 @@ public class MeteorMode extends ColorPickerMode {
             @Override
             public void onClick(View v) {
                 random = ((AppCompatCheckBox)v).isChecked();
+                send_configs();
             }
         });
     }
@@ -133,9 +136,8 @@ public class MeteorMode extends ColorPickerMode {
     }
 
     //currently does NOT include color and random state!
-    @Override
-    public String generate_configs(){
-        return "split:meteor:" + speed + " " + length;
+    public void send_configs(){
+        ((MainActivity)getActivity()).send_config("split:meteor:" + speed + " " + length + "\n");
     }
 
 }

@@ -30,6 +30,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import static zalia.pacemaker.R.id.connect_button;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -114,14 +116,14 @@ public class MainActivity extends AppCompatActivity {
         //initiate Bluetooth adapter
         btAdapter = BluetoothAdapter.getDefaultAdapter();
 //        checkBTState();
-        disableCommit();
+        enableConnect();
     }
 
     // Check for Bluetooth support, check state and prompt user to turn it on if its not
     private void checkBTState() {
         // Emulator doesn't support Bluetooth and will return null
         if (btAdapter == null) {
-            disableCommit();
+            enableConnect();
             toast("Fatal Error: Bluetooth Not supported. Aborting.");
         } else {
             if (btAdapter.isEnabled()) {
@@ -208,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
                 // If the resultCode is 0, the user selected "No" when prompt to
                 // allow the app to enable bluetooth.
                 Log.i(TAG, "User declined bluetooth access!");
-                disableCommit();
+                enableConnect();
             } else {
                 Log.i(TAG, "User allowed bluetooth access!");
                 if (heartbeat_mac != null) {
@@ -248,10 +250,10 @@ public class MainActivity extends AppCompatActivity {
                     }catch(Exception e){
                         Log.d(TAG, "Exception while attempting to dismiss paired devices dialog. It propably was not active in which case everything is fine.");
                     }
-                    enableCommit();
+                    disableConnect();
                 }else{
                     toast("Verbindungsversuch fehlgeschlagen.");
-                    disableCommit();
+                    enableConnect();
                     heartbeat_mac = null;
                 }
                 progress.dismiss();
@@ -346,7 +348,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             //there are no paired devices so we skip this and directly go to discovery
             bt_discover();
-            disableCommit();
+            enableConnect();
             return;
         }
 
@@ -366,7 +368,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         paired_dialog.dismiss();
-                        disableCommit();
+                        enableConnect();
                     }
                 });
         paired_dialog = builder.create();
@@ -415,7 +417,7 @@ public class MainActivity extends AppCompatActivity {
                                 public void onClick(DialogInterface dialog, int which) {
                                     discovered_dialog.dismiss();
                                     unregisterReceiver(bt_scan_receiver);
-                                    disableCommit();
+                                    enableConnect();
                                 }
                             });
                     discovered_dialog = builder.create();
@@ -454,7 +456,7 @@ public class MainActivity extends AppCompatActivity {
                         arrayOfFoundBTDevices.add(device.getName() + " / " + device.getAddress());
                     }
                 } else if (BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
-                    disableCommit();
+                    enableConnect();
                     toast("Bluetooth Verbindung wurde getrennt.");
                 }
             }
@@ -477,12 +479,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //toggles commit button to connect button
-    private void disableCommit() {
+    private void enableConnect() {
         //setup commit button
-        Button commit_button = (Button) findViewById(R.id.commit_button);
-        commit_button.setText(R.string.connect);
+        Button connect_button = (Button) findViewById(R.id.connect_button);
+        connect_button.setText("Verbindung herstellen");
 //        toast("Set button text to 'Verbinden'");
-        commit_button.setOnClickListener(new View.OnClickListener() {
+        connect_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 checkBTState();
@@ -491,31 +493,36 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //toggles connect button to commit button
-    private void enableCommit() {
-        Button commit_button = (Button) findViewById(R.id.commit_button);
-        commit_button.setText(R.string.commit);
+    private void disableConnect() {
+        Button connect_button = (Button) findViewById(R.id.connect_button);
+        connect_button.setText("Verbindung trennen");
 //        toast("Set button text to 'Übernehmen'");
-        commit_button.setOnClickListener(new View.OnClickListener() {
+        connect_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //just in case BT connection broke while the app was open
-                send_config(active_mode.generate_configs());
+                try { outStream.close(); } catch (IOException e) { }
+                outStream = null;
+                try{ btSocket.close(); } catch (IOException e) { }
+                btSocket = null;
+                enableConnect();
             }
         });
     }
 
     //send the config string of the currently active PacemakerMode via bluetooth to the heartbeat device
     protected void send_config(String config) {
-        toast("Config gesendet: '" + config + "'");
-        try {
-            byte[] msgBuffer = config.getBytes();
+        Log.d(TAG, "Config generiert: '" + config + "'");
+        if(btSocket != null) {
             try {
-                outStream.write(msgBuffer);
-            } catch (IOException e) {
-                toast("Fatal Error: " + e.getMessage());
+                byte[] msgBuffer = config.getBytes();
+                try {
+                    outStream.write(msgBuffer);
+                } catch (IOException e) {
+                    toast("Fatal Error: " + e.getMessage());
+                }
+            } catch (NullPointerException e) {
+                toast("Fatal Error: Bluetooth not active or not supported");
             }
-        } catch (NullPointerException e) {
-            toast("Fatal Error: Bluetooth not active or not supported");
         }
     }
 

@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.flask.colorpicker.ColorPickerView;
 import com.flask.colorpicker.OnColorChangedListener;
@@ -45,12 +46,16 @@ public class ColorPickerMode extends PacemakerMode {
                 public void onColorChanged(int selectedColor) {
                     current_color = selectedColor;
                     change_background(selectedColor);
+                    send_configs();
                 }
             });
             colorPickerView.setLightnessSlider(lightness_slider);
             lightness_slider.setColorPicker(colorPickerView);
             lightness_slider.setColor(colorPickerView.getSelectedColor());
             initialized = true;
+
+            //LinearLayout colorPickerWrapper = (LinearLayout) view.findViewById(R.id.color_picker_wrapper);
+            //colorPickerWrapper.setBackgroundResource(R.drawable.rounded_corners_background);
         } else{
             change_background(current_color);
         }
@@ -61,8 +66,8 @@ public class ColorPickerMode extends PacemakerMode {
     }
 
     @Override
-    public String generate_configs() {
-        return "constant: " + current_color + "\n";
+    public void send_configs() {
+        ((MainActivity)getActivity()).send_config("constant: " + current_color + "\n");
     }
 
 }

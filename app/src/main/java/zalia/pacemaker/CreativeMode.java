@@ -16,7 +16,11 @@ import com.flask.colorpicker.builder.ColorPickerClickListener;
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static android.R.attr.id;
 
 
 /**
@@ -39,6 +43,7 @@ public class CreativeMode extends PacemakerMode {
             R.id.buttonl3,
             R.id.buttonr3,
     };
+    private Map<Integer, Integer> button_colors;
 
 
     @Override
@@ -56,6 +61,11 @@ public class CreativeMode extends PacemakerMode {
             //default settings
             active_color = Color.WHITE;
             if (buttons == null) buttons = new ArrayList<>();
+            button_colors = new HashMap<>();
+            for(int bid : BUTTON_IDS){
+                button_colors.put(bid, Color.BLACK);
+            }
+            send_configs();
 
             //setup color picker dialog
             color_picker_dialog_button = (Button) view.findViewById(R.id.color_picker_dialog_button);
@@ -100,6 +110,7 @@ public class CreativeMode extends PacemakerMode {
                     @Override
                     public void onClick(View v) {
                         String id = "";
+                        button_colors.put(v.getId(), active_color);
                         switch (v.getId()) {
                             case R.id.buttonT:
                                 id = "top";
@@ -138,8 +149,12 @@ public class CreativeMode extends PacemakerMode {
     }
 
     @Override
-    public String generate_configs() {
-        return null;
+    public void send_configs() {
+        for (Map.Entry<Integer, Integer> entry : button_colors.entrySet()) {
+            int button_id = entry.getKey();
+            int color = entry.getValue();
+            ((MainActivity) getActivity()).send_config("section " + button_id + " " + color + "\n");
+        }
     }
 
 }
