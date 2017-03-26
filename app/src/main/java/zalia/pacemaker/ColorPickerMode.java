@@ -4,11 +4,13 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 
 import com.flask.colorpicker.ColorPickerView;
@@ -27,8 +29,10 @@ public class ColorPickerMode extends PacemakerMode {
     protected ColorPickerView colorPickerView;
     protected LightnessSlider lightness_slider;
     private View root;
-    protected int current_color;
     private boolean initialized = false;
+
+    //default settings
+    protected int current_color = Color.rgb(204,65,36);
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
@@ -37,32 +41,29 @@ public class ColorPickerMode extends PacemakerMode {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState){
-        if(!initialized) {
-            //default settings
-            current_color = Color.WHITE;
-            change_background(current_color);
-
-            //setup listeners
-            colorPickerView = (ColorPickerView) view.findViewById(R.id.color_picker_view);
-            lightness_slider = (LightnessSlider) view.findViewById(R.id.color_picker_lightness);
-            colorPickerView.addOnColorChangedListener(new OnColorChangedListener() {
-                @Override
-                public void onColorChanged(int selectedColor) {
-                    current_color = selectedColor;
-                    change_background(selectedColor);
-                    send_configs();
-                }
-            });
-            colorPickerView.setLightnessSlider(lightness_slider);
-            lightness_slider.setColor(current_color);
-            change_background(current_color);
-            initialized = true;
-
-            //LinearLayout colorPickerWrapper = (LinearLayout) view.findViewById(R.id.color_picker_wrapper);
-            //colorPickerWrapper.setBackgroundResource(R.drawable.rounded_corners_background);
-        } else{
-            change_background(current_color);
-        }
+        //setup listeners
+        colorPickerView = (ColorPickerView) view.findViewById(R.id.color_picker_view);
+        lightness_slider = (LightnessSlider) view.findViewById(R.id.color_picker_lightness);
+        colorPickerView.addOnColorChangedListener(new OnColorChangedListener() {
+            @Override
+            public void onColorChanged(int selectedColor) {
+                current_color = selectedColor;
+                change_background(selectedColor);
+                send_configs();
+            }
+        });
+        colorPickerView.setLightnessSlider(lightness_slider);
+//            colorPickerView.setInitialColor(current_color, false);
+        final ViewTreeObserver lightness_observer = lightness_slider.getViewTreeObserver();
+        lightness_observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                lightness_slider.setColor(current_color);
+                Log.d("CPM", "onGlobalLayout() call");
+            }
+        });
+//            lightness_slider.setColor(current_color);
+        change_background(current_color);
     }
 
     protected void change_background(int color){

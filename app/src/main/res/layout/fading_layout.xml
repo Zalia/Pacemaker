@@ -15,11 +15,12 @@
         android:layout_marginRight="20dp"
         android:orientation="vertical">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:background="@drawable/rounded_corners_background">
+            android:background="@drawable/rounded_corners_background"
+            android:orientation="vertical">
 
             <zalia.pacemaker.CustomColorPickerView
                 android:id="@+id/color_picker_view"
@@ -43,7 +44,7 @@
                 android:layout_marginRight="5dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="5dp"/>
-        </RelativeLayout>
+        </LinearLayout>
 
         <TextView
             android:id="@+id/fading_speed_text"
@@ -58,15 +59,6 @@
             android:id="@+id/fading_speed_slider"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-
-        <android.support.v7.widget.AppCompatCheckBox
-            android:id="@+id/split_checkbox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="3dp"
-            android:layout_marginTop="15dp"
-            android:text="Symmetrisch"
-            android:textColor="#000" />
 
         <android.support.v7.widget.AppCompatCheckBox
             android:id="@+id/heartbeat_checkbox"

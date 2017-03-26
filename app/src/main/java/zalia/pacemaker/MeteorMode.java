@@ -28,30 +28,23 @@ public class MeteorMode extends ColorPickerMode {
 
     private SeekBar speed_bar;
     private SeekBar length_bar;
-    private AppCompatCheckBox random_checkbox;
     private AppCompatCheckBox split_box;
 
-    private int speed;
-    private int length;
-    private String random;
-    private String split;
+    //default settings
+    private int speed = 400;
+    private int length = 40;
+    private String split = "split:";
+    //change default color in onCreateView!
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
+//        current_color = Color.rgb(255, 255, 255);
         return inflater.inflate(R.layout.meteor_layout, parent, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState){
-
         super.onViewCreated(view, savedInstanceState);
-
-        //default
-        speed = 400;
-        length = 40;
-        random = "0";
-        split = "split:";
-
 
         //register speed seekbar
         speed_bar = (SeekBar) view.findViewById(R.id.meteor_speed_slider);
@@ -91,19 +84,6 @@ public class MeteorMode extends ColorPickerMode {
         });
         length_bar.setProgress(get_progress_respecting_range(length, MIN_LENGTH, MAX_LENGTH));
 
-        //register randomness checkbar
-        random_checkbox = (AppCompatCheckBox) view.findViewById(R.id.meteor_random_checkbox);
-        random_checkbox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                random = ((AppCompatCheckBox)v).isChecked() ? "1" : "0";
-                send_configs();
-            }
-        });
-        if(random.equals("1")){
-            random_checkbox.setChecked(true);
-        }
-
         //register split checkbox
         split_box = (AppCompatCheckBox) view.findViewById(R.id.split_checkbox);
         split_box.setOnClickListener(new View.OnClickListener() {
@@ -117,7 +97,7 @@ public class MeteorMode extends ColorPickerMode {
             split_box.setChecked(true);
         }
 
-        change_background(Color.WHITE);
+        change_background(current_color);
     }
 
     @Override
@@ -157,10 +137,6 @@ public class MeteorMode extends ColorPickerMode {
                         ui_element_color
                 }
         );
-        if(random_checkbox != null) {
-            random_checkbox.setTextColor(ui_element_color);
-            random_checkbox.setSupportButtonTintList(colorStateList);
-        }
         if(split_box != null) {
             split_box.setTextColor(ui_element_color);
             split_box.setSupportButtonTintList(colorStateList);
@@ -169,7 +145,7 @@ public class MeteorMode extends ColorPickerMode {
 
     //currently does NOT include color and random state!
     public void send_configs(){
-        ((MainActivity)getActivity()).send_config("split:meteor:" + speed + " " + length + " " + getRGB() + " " + random + "\n");
+        ((MainActivity)getActivity()).send_config("split:meteor:" + speed + " " + length + " " + getRGB() + "\n");
     }
 
 }

@@ -18,8 +18,9 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:background="@drawable/rounded_corners_background"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
             android:orientation="vertical">
 
             <zalia.pacemaker.CustomColorPickerView
@@ -29,60 +30,24 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="20dp"
-                app:alphaSlider="false"
                 app:density="12"
                 app:lightnessSlider="true"
                 app:lightnessSliderView="@+id/color_picker_lightness"
-                app:wheelType="FLOWER" />
+                app:alphaSlider="false"
+                app:wheelType="FLOWER"
+                />
 
             <com.flask.colorpicker.slider.LightnessSlider
                 android:id="@id/color_picker_lightness"
                 android:layout_width="match_parent"
                 android:layout_height="32dp"
                 android:layout_below="@id/color_picker_view"
+                android:layout_marginBottom="5dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginTop="15dp"
-                android:layout_marginBottom="5dp"/>
+                />
+
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/meteor_speed_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:padding="10dp"
-            android:text="Tempo"
-            android:textColor="#000" />
-
-        <SeekBar
-            android:id="@+id/meteor_speed_slider"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/meteor_length_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:text="Länge"
-
-            android:textColor="#000" />
-
-        <SeekBar
-            android:id="@+id/meteor_length_slider"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <android.support.v7.widget.AppCompatCheckBox
-            android:id="@+id/split_checkbox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="3dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="20dp"
-            android:text="Symmetrisch"
-            android:textColor="#000"/>
-
     </LinearLayout>
 </ScrollView>

@@ -25,27 +25,22 @@ public class FadingMode extends ColorPickerMode {
     private static final int MAX_SPEED = 50;
 
     private SeekBar speed_bar;
-    private AppCompatCheckBox split_box;
     private AppCompatCheckBox heartbeat_box;
 
-    private int speed;
-    private String split;
-    private String heartbeat;
+    //default settings
+    private int speed = 400;
+    private String heartbeat = "0";
+    //change default color in onCreateView!
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
+//        current_color = Color.rgb(255, 255, 255);
         return inflater.inflate(R.layout.fading_layout, parent, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-
         super.onViewCreated(view, savedInstanceState);
-
-        //default
-        speed = 400;
-        split = "";
-        heartbeat = "0";
 
         //register speed seekbar
         speed_bar = (SeekBar) view.findViewById(R.id.fading_speed_slider);
@@ -66,19 +61,6 @@ public class FadingMode extends ColorPickerMode {
         });
         speed_bar.setProgress(get_progress_respecting_range(speed, MIN_SPEED, MAX_SPEED));
 
-        //register split checkbox
-        split_box = (AppCompatCheckBox) view.findViewById(R.id.split_checkbox);
-        split_box.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                split = ((AppCompatCheckBox)v).isChecked() ? "split:" : "";
-                send_configs();
-            }
-        });
-        if(split.equals("split:")){
-            split_box.setChecked(true);
-        }
-
         //register heartbeat checkbox
         heartbeat_box = (AppCompatCheckBox) view.findViewById(R.id.heartbeat_checkbox);
         heartbeat_box.setOnClickListener(new View.OnClickListener() {
@@ -91,7 +73,7 @@ public class FadingMode extends ColorPickerMode {
         if(heartbeat.equals("1")){
             heartbeat_box.setChecked(true);
         }
-        change_background(Color.WHITE);
+        change_background(current_color);
     }
 
     @Override
@@ -114,8 +96,7 @@ public class FadingMode extends ColorPickerMode {
         }
 
         //change colors of checkboxes
-        if(split_box != null) {
-            split_box.setTextColor(ui_element_color);
+        if(heartbeat_box != null) {
             heartbeat_box.setTextColor(ui_element_color);
             ColorStateList colorStateList = new ColorStateList(
                     new int[][] {
@@ -127,13 +108,12 @@ public class FadingMode extends ColorPickerMode {
                             ui_element_color
                     }
             );
-            split_box.setSupportButtonTintList(colorStateList);
             heartbeat_box.setSupportButtonTintList(colorStateList);
         }
     }
 
     //currently does NOT include color and random state!
     public void send_configs(){
-        ((MainActivity)getActivity()).send_config(split + "fillcolor:" + speed + " " + this.getRGB() + " " + heartbeat + "\n");
+        ((MainActivity)getActivity()).send_config("fillcolor:" + speed + " " + this.getRGB() + " " + heartbeat + "\n");
     }
 }
