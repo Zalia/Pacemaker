@@ -23,6 +23,8 @@ import android.widget.Button;
 import android.widget.Toast;
 import android.widget.Spinner;
 
+import com.flask.colorpicker.slider.LightnessSlider;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -59,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
     private MeteorMode comet_mode;
     private EffectMode effect_mode;
     private CreativeMode creative_mode;
+    private FadingMode fading_mode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,22 +85,28 @@ public class MainActivity extends AppCompatActivity {
                         active_mode = color_picker_mode;
                         break;
                     case 1:
+                        //"Pulsieren"
+//                        if(fading_mode == null) fading_mode = new FadingMode();
+                        fading_mode = new FadingMode();
+                        active_mode = fading_mode;
+                        break;
+                    case 2:
                         //"Regenbogen"
                         if(rainbow_mode == null) rainbow_mode = new FullRainbowMode();
                         active_mode = rainbow_mode;
                         break;
-                    case 2:
+                    case 3:
                         //"Komet"
 //                        if(comet_mode == null) comet_mode = new MeteorMode();
                         comet_mode = new MeteorMode();
                         active_mode = comet_mode;
                         break;
-                    case 3:
+                    case 4:
                         //"Test Mode"
                         if(effect_mode == null) effect_mode = new EffectMode();
                         active_mode = effect_mode;
                         break;
-                    case 4:
+                    case 5:
                         //"Creative Mode"
 //                        if(creative_mode == null) creative_mode = new CreativeMode();
                         creative_mode = new CreativeMode();
@@ -539,8 +548,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //utility method for all fragments that use progress bars
-    protected static int normalize_progress(int progress, int min, int max) {
-        double result = (double) min + ((double) max - (double) min) / (100 / (double) progress);
-        return (int) Math.round(result);
+    protected static double normalize_progress(int progress, int min, int max) {
+        return (double) min + ((double) max - (double) min) / (100 / (double) progress);
+    }
+
+    //utility function, returns seekbar progress of value within the given range
+    protected static int get_progress_respecting_range(double value, int min, int max) {
+        return (int) Math.round(100 * ((value - min) / ((double) max - (double) min)));
     }
 }

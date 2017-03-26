@@ -1,8 +1,10 @@
 package zalia.pacemaker;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.content.res.ResourcesCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +14,9 @@ import android.widget.LinearLayout;
 import com.flask.colorpicker.ColorPickerView;
 import com.flask.colorpicker.OnColorChangedListener;
 import com.flask.colorpicker.OnColorSelectedListener;
+import com.flask.colorpicker.slider.AlphaSlider;
 import com.flask.colorpicker.slider.LightnessSlider;
+import com.flask.colorpicker.slider.OnValueChangedListener;
 
 /**
  * Created by Zalia on 17.02.2017.
@@ -20,10 +24,10 @@ import com.flask.colorpicker.slider.LightnessSlider;
 
 public class ColorPickerMode extends PacemakerMode {
 
-    private ColorPickerView colorPickerView;
-    private LightnessSlider lightness_slider;
+    protected ColorPickerView colorPickerView;
+    protected LightnessSlider lightness_slider;
     private View root;
-    private int current_color;
+    protected int current_color;
     private boolean initialized = false;
 
     @Override
@@ -50,8 +54,8 @@ public class ColorPickerMode extends PacemakerMode {
                 }
             });
             colorPickerView.setLightnessSlider(lightness_slider);
-            lightness_slider.setColorPicker(colorPickerView);
-            lightness_slider.setColor(colorPickerView.getSelectedColor());
+            lightness_slider.setColor(current_color);
+            change_background(current_color);
             initialized = true;
 
             //LinearLayout colorPickerWrapper = (LinearLayout) view.findViewById(R.id.color_picker_wrapper);
@@ -65,9 +69,12 @@ public class ColorPickerMode extends PacemakerMode {
         ((MainActivity)getActivity()).findViewById(R.id.pacemaker_layout).setBackgroundColor(color);
     }
 
-    @Override
-    public void send_configs() {
-        ((MainActivity)getActivity()).send_config("constant: " + current_color + "\n");
+    protected String getRGB() {
+        return Color.red(current_color) + " " + Color.green(current_color) + " " + Color.blue(current_color);
     }
 
+    @Override
+    public void send_configs() {
+        ((MainActivity)getActivity()).send_config("constant: " + getRGB() + "\n");
+    }
 }

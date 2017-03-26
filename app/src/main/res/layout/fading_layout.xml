@@ -18,9 +18,8 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/rounded_corners_background"
             android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp">
+            android:background="@drawable/rounded_corners_background">
 
             <zalia.pacemaker.CustomColorPickerView
                 android:id="@+id/color_picker_view"
@@ -29,24 +28,55 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="20dp"
+                app:alphaSlider="false"
                 app:density="12"
                 app:lightnessSlider="true"
                 app:lightnessSliderView="@+id/color_picker_lightness"
-                app:alphaSlider="false"
-                app:wheelType="FLOWER"
-                />
+                app:wheelType="FLOWER" />
 
             <com.flask.colorpicker.slider.LightnessSlider
                 android:id="@id/color_picker_lightness"
                 android:layout_width="match_parent"
                 android:layout_height="32dp"
                 android:layout_below="@id/color_picker_view"
-                android:layout_marginBottom="5dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginTop="15dp"
-                />
-
+                android:layout_marginBottom="5dp"/>
         </RelativeLayout>
+
+        <TextView
+            android:id="@+id/fading_speed_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:padding="10dp"
+            android:text="Tempo"
+            android:textColor="#000" />
+
+        <SeekBar
+            android:id="@+id/fading_speed_slider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <android.support.v7.widget.AppCompatCheckBox
+            android:id="@+id/split_checkbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="3dp"
+            android:layout_marginTop="15dp"
+            android:text="Symmetrisch"
+            android:textColor="#000" />
+
+        <android.support.v7.widget.AppCompatCheckBox
+            android:id="@+id/heartbeat_checkbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="3dp"
+            android:layout_marginTop="10dp"
+            android:text="Herzschlag"
+            android:textColor="#000" />
+
     </LinearLayout>
 </ScrollView>

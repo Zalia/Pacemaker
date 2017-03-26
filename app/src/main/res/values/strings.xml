@@ -6,6 +6,7 @@
 
     <string-array name="modes_array">
         <item>Konstant</item>
+        <item>Pulsieren</item>
         <item>Regenbogen</item>
         <item>Meteor</item>
         <item>Test Mode</item>

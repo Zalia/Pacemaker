@@ -1,8 +1,13 @@
 package zalia.pacemaker;
 
+import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatCheckBox;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +15,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.SeekBar;
 
+import static zalia.pacemaker.MainActivity.get_progress_respecting_range;
 import static zalia.pacemaker.MainActivity.normalize_progress;
 
 /**
@@ -19,13 +25,14 @@ import static zalia.pacemaker.MainActivity.normalize_progress;
 public class FullRainbowMode extends PacemakerMode {
 
     private static final int MIN_SPEED = 1000;
-    private static final int MAX_SPEED = 10;
+    private static final int MAX_SPEED = 50;
     private static final int MIN_BRIGHTNESS = 0;
-    private static final int MAX_BRIGHTNESS = 10;
+    private static final int MAX_BRIGHTNESS = 1;
     private static final int MIN_RAINBOWNESS = 0;
     private static final int MAX_RAINBOWNESS = 10;
 
-    private int speed, brightness, rainbowness;
+    private int speed, rainbowness;
+    private double brightness;
     private String mirror;
     private boolean initialized = false;
 
@@ -39,9 +46,9 @@ public class FullRainbowMode extends PacemakerMode {
         change_background();
         if(!initialized) {
             //default config
-            speed = MIN_SPEED;
-            brightness = MIN_BRIGHTNESS;
-            rainbowness = MIN_RAINBOWNESS;
+            speed = 400;
+            brightness = MAX_BRIGHTNESS;
+            rainbowness = 0;
             mirror = "";
 
             //setup listeners
@@ -49,7 +56,7 @@ public class FullRainbowMode extends PacemakerMode {
             speed_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    speed = normalize_progress(progress, MIN_SPEED, MAX_SPEED);
+                    speed = (int) Math.round(normalize_progress(progress, MIN_SPEED, MAX_SPEED));
                     send_configs();
                 }
 
@@ -61,6 +68,7 @@ public class FullRainbowMode extends PacemakerMode {
                 public void onStopTrackingTouch(SeekBar seekBar) {
                 }
             });
+            speed_bar.setProgress(get_progress_respecting_range(speed, MIN_SPEED, MAX_SPEED));
 
             SeekBar brightness_bar = (SeekBar) view.findViewById(R.id.rainbow_brightness_slider);
             brightness_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -78,12 +86,13 @@ public class FullRainbowMode extends PacemakerMode {
                 public void onStopTrackingTouch(SeekBar seekBar) {
                 }
             });
+            brightness_bar.setProgress(get_progress_respecting_range(brightness, MIN_BRIGHTNESS, MAX_BRIGHTNESS));
 
             SeekBar rainbow_bar = (SeekBar) view.findViewById(R.id.rainbow_slider);
             rainbow_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    rainbowness = MainActivity.normalize_progress(progress, MIN_RAINBOWNESS, MAX_RAINBOWNESS);
+                    rainbowness = (int) Math.round(MainActivity.normalize_progress(progress, MIN_RAINBOWNESS, MAX_RAINBOWNESS));
                     send_configs();
                 }
 
@@ -95,8 +104,9 @@ public class FullRainbowMode extends PacemakerMode {
                 public void onStopTrackingTouch(SeekBar seekBar) {
                 }
             });
+            rainbow_bar.setProgress(get_progress_respecting_range(rainbowness, MIN_RAINBOWNESS, MAX_RAINBOWNESS));
 
-            CheckBox mirror_box = (CheckBox) view.findViewById(R.id.mirror_button);
+            AppCompatCheckBox mirror_box = (AppCompatCheckBox) view.findViewById(R.id.mirror_button);
             mirror_box.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -104,6 +114,36 @@ public class FullRainbowMode extends PacemakerMode {
                     send_configs();
                 }
             });
+            if(mirror.equals("split:")){
+                mirror_box.setChecked(true);
+            }
+
+            //draw gui elements white
+            speed_bar.getProgressDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
+            Drawable thumb = speed_bar.getThumb();
+            thumb.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
+            speed_bar.setThumb(thumb);
+            brightness_bar.getProgressDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
+            thumb = brightness_bar.getThumb();
+            thumb.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
+            brightness_bar.setThumb(thumb);
+            rainbow_bar.getProgressDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
+            thumb = rainbow_bar.getThumb();
+            thumb.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
+            rainbow_bar.setThumb(thumb);
+
+            mirror_box.setTextColor(Color.WHITE);
+            ColorStateList colorStateList = new ColorStateList(
+                    new int[][] {
+                            new int[] { -android.R.attr.state_checked }, // unchecked
+                            new int[] {  android.R.attr.state_checked }  // checked
+                    },
+                    new int[] {
+                            Color.WHITE,
+                            Color.WHITE
+                    }
+            );
+            mirror_box.setSupportButtonTintList(colorStateList);
             initialized = true;
         }
     }
@@ -115,7 +155,7 @@ public class FullRainbowMode extends PacemakerMode {
     }
 
     public void send_configs() {
-        ((MainActivity)getActivity()).send_config(mirror + "rainbow:" + speed + " " + rainbowness + "\n");
+        ((MainActivity)getActivity()).send_config(mirror + "rainbow:" + speed + " " + rainbowness + " " + brightness + "\n");
     }
 
 }
