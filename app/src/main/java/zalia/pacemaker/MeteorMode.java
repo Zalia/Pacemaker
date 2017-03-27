@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import static android.R.attr.thumb;
 import static zalia.pacemaker.MainActivity.get_progress_respecting_range;
 import static zalia.pacemaker.MainActivity.normalize_progress;
 
@@ -114,17 +115,10 @@ public class MeteorMode extends ColorPickerMode {
         length_text.setTextColor(ui_element_color);
 
         //change colors of progressbars
-        if(speed_bar != null) {
-            speed_bar.getProgressDrawable().setColorFilter(ui_element_color, PorterDuff.Mode.SRC_IN);
-            Drawable thumb = speed_bar.getThumb();
-            thumb.setColorFilter(ui_element_color, PorterDuff.Mode.SRC_IN);
-            speed_bar.setThumb(thumb);
-
-        }
-        if(length_bar != null){
-            length_bar.getProgressDrawable().setColorFilter(ui_element_color, PorterDuff.Mode.SRC_IN);
-            length_bar.getThumb().setColorFilter(ui_element_color, PorterDuff.Mode.SRC_IN);
-        }
+        speed_bar.getProgressDrawable().setColorFilter(ui_element_color, PorterDuff.Mode.SRC_IN);
+        speed_bar.getThumb().setColorFilter(ui_element_color, PorterDuff.Mode.SRC_IN);
+        length_bar.getProgressDrawable().setColorFilter(ui_element_color, PorterDuff.Mode.SRC_IN);
+        length_bar.getThumb().setColorFilter(ui_element_color, PorterDuff.Mode.SRC_IN);
 
         //change colors of checkboxes
         ColorStateList colorStateList = new ColorStateList(
@@ -137,10 +131,8 @@ public class MeteorMode extends ColorPickerMode {
                         ui_element_color
                 }
         );
-        if(split_box != null) {
-            split_box.setTextColor(ui_element_color);
-            split_box.setSupportButtonTintList(colorStateList);
-        }
+        split_box.setTextColor(ui_element_color);
+        split_box.setSupportButtonTintList(colorStateList);
     }
 
     //currently does NOT include color and random state!

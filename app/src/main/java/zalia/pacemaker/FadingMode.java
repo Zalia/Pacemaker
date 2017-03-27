@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import static android.R.attr.thumb;
 import static zalia.pacemaker.MainActivity.get_progress_respecting_range;
 import static zalia.pacemaker.MainActivity.normalize_progress;
 
@@ -88,28 +89,24 @@ public class FadingMode extends ColorPickerMode {
         speed_text.setTextColor(ui_element_color);
 
         //change colors of progressbars
-        if (speed_bar != null) {
-            speed_bar.getProgressDrawable().setColorFilter(ui_element_color, PorterDuff.Mode.SRC_IN);
-            Drawable thumb = speed_bar.getThumb();
-            thumb.setColorFilter(ui_element_color, PorterDuff.Mode.SRC_IN);
-            speed_bar.setThumb(thumb);
-        }
+        speed_bar.getProgressDrawable().setColorFilter(ui_element_color, PorterDuff.Mode.SRC_IN);
+        speed_bar.getThumb().setColorFilter(ui_element_color, PorterDuff.Mode.SRC_IN);
+
 
         //change colors of checkboxes
-        if(heartbeat_box != null) {
-            heartbeat_box.setTextColor(ui_element_color);
-            ColorStateList colorStateList = new ColorStateList(
-                    new int[][] {
-                            new int[] { -android.R.attr.state_checked }, // unchecked
-                            new int[] {  android.R.attr.state_checked }  // checked
-                    },
-                    new int[] {
-                            ui_element_color,
-                            ui_element_color
-                    }
-            );
-            heartbeat_box.setSupportButtonTintList(colorStateList);
-        }
+        heartbeat_box.setTextColor(ui_element_color);
+        ColorStateList colorStateList = new ColorStateList(
+                new int[][] {
+                        new int[] { -android.R.attr.state_checked }, // unchecked
+                        new int[] {  android.R.attr.state_checked }  // checked
+                },
+                new int[] {
+                        ui_element_color,
+                        ui_element_color
+                }
+        );
+        heartbeat_box.setSupportButtonTintList(colorStateList);
+
     }
 
     //currently does NOT include color and random state!

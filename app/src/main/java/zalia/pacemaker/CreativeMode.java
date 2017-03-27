@@ -139,7 +139,7 @@ public class CreativeMode extends PacemakerMode {
                         }
                         Drawable bgShape = v.getBackground();
                         bgShape.setColorFilter(active_color, PorterDuff.Mode.MULTIPLY);
-                        ((MainActivity) getActivity()).send_config("section " + id + " " + active_color);
+                        ((MainActivity) getActivity()).send_config("setpixel " + id + " " + active_color + "\n");
                     }
                 });
                 buttons.add(button);
@@ -153,7 +153,7 @@ public class CreativeMode extends PacemakerMode {
         for (Map.Entry<Integer, Integer> entry : button_colors.entrySet()) {
             int button_id = entry.getKey();
             int color = entry.getValue();
-            ((MainActivity) getActivity()).send_config("section " + button_id + " " + color + "\n");
+            ((MainActivity) getActivity()).send_config("setpixel " + button_id + " " + color + "\n");
         }
     }
 

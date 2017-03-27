@@ -23,16 +23,12 @@ import android.widget.Button;
 import android.widget.Toast;
 import android.widget.Spinner;
 
-import com.flask.colorpicker.slider.LightnessSlider;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-
-import static zalia.pacemaker.R.id.connect_button;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -57,11 +53,13 @@ public class MainActivity extends AppCompatActivity {
     private PacemakerMode active_mode;
     //keep references to each mode to keep configurations
     private ColorPickerMode color_picker_mode;
-    private FullRainbowMode rainbow_mode;
-    private MeteorMode comet_mode;
-    private EffectMode effect_mode;
-    private CreativeMode creative_mode;
     private FadingMode fading_mode;
+    private MeteorMode meteor_mode;
+    private FullRainbowMode rainbow_mode;
+    private RandomMeteorMode random_meteor_mode;
+    private CreativeMode creative_mode;
+    private TestMode test_mode;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,25 +90,32 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case 2:
                         //"Regenbogen"
-                        if(rainbow_mode == null) rainbow_mode = new FullRainbowMode();
+//                        if(rainbow_mode == null) rainbow_mode = new FullRainbowMode();
+                        rainbow_mode = new FullRainbowMode();
                         active_mode = rainbow_mode;
                         break;
                     case 3:
                         //"Komet"
-//                        if(comet_mode == null) comet_mode = new MeteorMode();
-                        comet_mode = new MeteorMode();
-                        active_mode = comet_mode;
+//                        if(meteor_mode == null) meteor_mode = new MeteorMode();
+                        meteor_mode = new MeteorMode();
+                        active_mode = meteor_mode;
                         break;
                     case 4:
-                        //"Test Mode"
-                        if(effect_mode == null) effect_mode = new EffectMode();
-                        active_mode = effect_mode;
+                        //"Sternenschauer"
+                        if(random_meteor_mode == null) random_meteor_mode = new RandomMeteorMode();
+                        active_mode = random_meteor_mode;
                         break;
                     case 5:
                         //"Creative Mode"
 //                        if(creative_mode == null) creative_mode = new CreativeMode();
                         creative_mode = new CreativeMode();
                         active_mode = creative_mode;
+                        break;
+                    case 6:
+                        //"Test Mode"
+//                        if(test_mode == null) test_mode = new TestMode();
+                        test_mode = new TestMode();
+                        active_mode = test_mode;
                         break;
                 }
                 ft.replace(R.id.frame_layout, active_mode);

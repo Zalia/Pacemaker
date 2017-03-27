@@ -9,7 +9,8 @@
         <item>"  Pulsieren"</item>
         <item>"  Regenbogen"</item>
         <item>"  Meteor"</item>
-        <item>"  Test Mode"</item>
+        <item>"  Sternenschauer</item>
         <item>"  Creative Mode"</item>
+        <!--<item>"  Test Mode"</item>-->
     </string-array>
 </resources>

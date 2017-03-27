@@ -13,7 +13,7 @@ import android.widget.RadioGroup;
  * Created by Zalia on 18.02.2017.
  */
 
-public class EffectMode extends PacemakerMode {
+public class TestMode extends PacemakerMode {
 
     private View root;
     private RadioGroup radio_group;
@@ -22,7 +22,7 @@ public class EffectMode extends PacemakerMode {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
-        return inflater.inflate(R.layout.effect_layout, parent, false);
+        return inflater.inflate(R.layout.test_layout, parent, false);
     }
 
     @Override

@@ -53,7 +53,6 @@ public class ColorPickerMode extends PacemakerMode {
             }
         });
         colorPickerView.setLightnessSlider(lightness_slider);
-//            colorPickerView.setInitialColor(current_color, false);
         final ViewTreeObserver lightness_observer = lightness_slider.getViewTreeObserver();
         lightness_observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -62,7 +61,11 @@ public class ColorPickerMode extends PacemakerMode {
                 Log.d("CPM", "onGlobalLayout() call");
             }
         });
-//            lightness_slider.setColor(current_color);
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
         change_background(current_color);
     }
 

@@ -15,6 +15,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.SeekBar;
 
+import static android.R.attr.thumb;
 import static zalia.pacemaker.MainActivity.get_progress_respecting_range;
 import static zalia.pacemaker.MainActivity.normalize_progress;
 
@@ -36,6 +37,11 @@ public class FullRainbowMode extends PacemakerMode {
     private String mirror;
     private boolean initialized = false;
 
+    private SeekBar rainbow_bar;
+    private SeekBar speed_bar;
+    private SeekBar brightness_bar;
+    private AppCompatCheckBox mirror_box;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
         return inflater.inflate(R.layout.full_rainbow_layout, parent, false);
@@ -43,7 +49,6 @@ public class FullRainbowMode extends PacemakerMode {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState){
-        change_background();
         if(!initialized) {
             //default config
             speed = 400;
@@ -52,7 +57,7 @@ public class FullRainbowMode extends PacemakerMode {
             mirror = "";
 
             //setup listeners
-            SeekBar speed_bar = (SeekBar) view.findViewById(R.id.rainbow_speed_slider);
+            speed_bar = (SeekBar) view.findViewById(R.id.rainbow_speed_slider);
             speed_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -68,9 +73,8 @@ public class FullRainbowMode extends PacemakerMode {
                 public void onStopTrackingTouch(SeekBar seekBar) {
                 }
             });
-            speed_bar.setProgress(get_progress_respecting_range(speed, MIN_SPEED, MAX_SPEED));
 
-            SeekBar brightness_bar = (SeekBar) view.findViewById(R.id.rainbow_brightness_slider);
+            brightness_bar = (SeekBar) view.findViewById(R.id.rainbow_brightness_slider);
             brightness_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -86,9 +90,8 @@ public class FullRainbowMode extends PacemakerMode {
                 public void onStopTrackingTouch(SeekBar seekBar) {
                 }
             });
-            brightness_bar.setProgress(get_progress_respecting_range(brightness, MIN_BRIGHTNESS, MAX_BRIGHTNESS));
 
-            SeekBar rainbow_bar = (SeekBar) view.findViewById(R.id.rainbow_slider);
+            rainbow_bar = (SeekBar) view.findViewById(R.id.rainbow_slider);
             rainbow_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -104,9 +107,8 @@ public class FullRainbowMode extends PacemakerMode {
                 public void onStopTrackingTouch(SeekBar seekBar) {
                 }
             });
-            rainbow_bar.setProgress(get_progress_respecting_range(rainbowness, MIN_RAINBOWNESS, MAX_RAINBOWNESS));
 
-            AppCompatCheckBox mirror_box = (AppCompatCheckBox) view.findViewById(R.id.mirror_button);
+            mirror_box = (AppCompatCheckBox) view.findViewById(R.id.mirror_button);
             mirror_box.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -114,41 +116,42 @@ public class FullRainbowMode extends PacemakerMode {
                     send_configs();
                 }
             });
-            if(mirror.equals("split:")){
-                mirror_box.setChecked(true);
-            }
-
-            //draw gui elements white
-            speed_bar.getProgressDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
-            Drawable thumb = speed_bar.getThumb();
-            thumb.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
-            speed_bar.setThumb(thumb);
-            brightness_bar.getProgressDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
-            thumb = brightness_bar.getThumb();
-            thumb.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
-            brightness_bar.setThumb(thumb);
-            rainbow_bar.getProgressDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
-            thumb = rainbow_bar.getThumb();
-            thumb.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
-            rainbow_bar.setThumb(thumb);
-
-            mirror_box.setTextColor(Color.WHITE);
-            ColorStateList colorStateList = new ColorStateList(
-                    new int[][] {
-                            new int[] { -android.R.attr.state_checked }, // unchecked
-                            new int[] {  android.R.attr.state_checked }  // checked
-                    },
-                    new int[] {
-                            Color.WHITE,
-                            Color.WHITE
-                    }
-            );
-            mirror_box.setSupportButtonTintList(colorStateList);
             initialized = true;
         }
+
+        //set current config
+        speed_bar.setProgress(get_progress_respecting_range(speed, MIN_SPEED, MAX_SPEED));
+        brightness_bar.setProgress(get_progress_respecting_range(brightness, MIN_BRIGHTNESS, MAX_BRIGHTNESS));
+        rainbow_bar.setProgress(get_progress_respecting_range(rainbowness, MIN_RAINBOWNESS, MAX_RAINBOWNESS));
+        if(mirror.equals("split:")){
+            mirror_box.setChecked(true);
+        }
+        change_background();
     }
 
     private void change_background(){
+        //draw gui elements white
+        speed_bar.getProgressDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
+        speed_bar.getThumb().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
+        brightness_bar.getProgressDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
+        brightness_bar.getThumb().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
+        rainbow_bar.getProgressDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
+        rainbow_bar.getThumb().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
+
+        mirror_box.setTextColor(Color.WHITE);
+        ColorStateList colorStateList = new ColorStateList(
+                new int[][] {
+                        new int[] { -android.R.attr.state_checked }, // unchecked
+                        new int[] {  android.R.attr.state_checked }  // checked
+                },
+                new int[] {
+                        Color.WHITE,
+                        Color.WHITE
+                }
+        );
+        mirror_box.setSupportButtonTintList(colorStateList);
+
+        //draw background in rainbow colors
         GradientDrawable rainbow = new GradientDrawable(GradientDrawable.Orientation.TL_BR,
                 new int[] {Color.YELLOW, Color.RED, Color.MAGENTA, Color.BLUE, Color.CYAN, Color.GREEN, Color.YELLOW, Color.RED });
         ((MainActivity)getActivity()).findViewById(R.id.pacemaker_layout).setBackground(rainbow);
