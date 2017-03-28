@@ -3,7 +3,6 @@ package zalia.pacemaker;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatCheckBox;
@@ -11,11 +10,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.SeekBar;
 
-import static android.R.attr.thumb;
+import static zalia.pacemaker.MainActivity.RAINBOW;
 import static zalia.pacemaker.MainActivity.get_progress_respecting_range;
 import static zalia.pacemaker.MainActivity.normalize_progress;
 
@@ -25,6 +23,8 @@ import static zalia.pacemaker.MainActivity.normalize_progress;
 
 public class FullRainbowMode extends PacemakerMode {
 
+    private final int ID = RAINBOW;
+
     private static final int MIN_SPEED = 1000;
     private static final int MAX_SPEED = 50;
     private static final int MIN_BRIGHTNESS = 0;
@@ -32,15 +32,16 @@ public class FullRainbowMode extends PacemakerMode {
     private static final int MIN_RAINBOWNESS = 0;
     private static final int MAX_RAINBOWNESS = 10;
 
-    private int speed, rainbowness;
-    private double brightness;
-    private String mirror;
-    private boolean initialized = false;
+    //default settings
+    private int speed = 400;
+    private int rainbowness = 0;
+    private double brightness = MAX_BRIGHTNESS;
+    private String split = "";
 
     private SeekBar rainbow_bar;
     private SeekBar speed_bar;
     private SeekBar brightness_bar;
-    private AppCompatCheckBox mirror_box;
+    private AppCompatCheckBox split_box;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
@@ -49,84 +50,87 @@ public class FullRainbowMode extends PacemakerMode {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState){
-        if(!initialized) {
-            //default config
-            speed = 400;
-            brightness = MAX_BRIGHTNESS;
-            rainbowness = 0;
-            mirror = "";
 
-            //setup listeners
-            speed_bar = (SeekBar) view.findViewById(R.id.rainbow_speed_slider);
-            speed_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                @Override
-                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    speed = (int) Math.round(normalize_progress(progress, MIN_SPEED, MAX_SPEED));
-                    send_configs();
-                }
+        //get configs if present
+        load_configs(((MainActivity)getActivity()).get_config(ID));
 
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {
-                }
+        //setup listeners
+        speed_bar = (SeekBar) view.findViewById(R.id.rainbow_speed_slider);
+        speed_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                speed = (int) Math.round(normalize_progress(progress, MIN_SPEED, MAX_SPEED));
+                send_configs();
+            }
 
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
-                }
-            });
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
 
-            brightness_bar = (SeekBar) view.findViewById(R.id.rainbow_brightness_slider);
-            brightness_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                @Override
-                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    brightness = normalize_progress(progress, MIN_BRIGHTNESS, MAX_BRIGHTNESS);
-                    send_configs();
-                }
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
 
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {
-                }
+        brightness_bar = (SeekBar) view.findViewById(R.id.rainbow_brightness_slider);
+        brightness_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                brightness = normalize_progress(progress, MIN_BRIGHTNESS, MAX_BRIGHTNESS);
+                send_configs();
+            }
 
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
-                }
-            });
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
 
-            rainbow_bar = (SeekBar) view.findViewById(R.id.rainbow_slider);
-            rainbow_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                @Override
-                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    rainbowness = (int) Math.round(MainActivity.normalize_progress(progress, MIN_RAINBOWNESS, MAX_RAINBOWNESS));
-                    send_configs();
-                }
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
 
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {
-                }
+        rainbow_bar = (SeekBar) view.findViewById(R.id.rainbow_slider);
+        rainbow_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                rainbowness = (int) Math.round(MainActivity.normalize_progress(progress, MIN_RAINBOWNESS, MAX_RAINBOWNESS));
+                send_configs();
+            }
 
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
-                }
-            });
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
 
-            mirror_box = (AppCompatCheckBox) view.findViewById(R.id.mirror_button);
-            mirror_box.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    mirror = isChecked ? "split:" : "";
-                    send_configs();
-                }
-            });
-            initialized = true;
-        }
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+
+        split_box = (AppCompatCheckBox) view.findViewById(R.id.mirror_button);
+        split_box.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                split = isChecked ? "split:" : "";
+                send_configs();
+            }
+        });
 
         //set current config
         speed_bar.setProgress(get_progress_respecting_range(speed, MIN_SPEED, MAX_SPEED));
         brightness_bar.setProgress(get_progress_respecting_range(brightness, MIN_BRIGHTNESS, MAX_BRIGHTNESS));
         rainbow_bar.setProgress(get_progress_respecting_range(rainbowness, MIN_RAINBOWNESS, MAX_RAINBOWNESS));
-        if(mirror.equals("split:")){
-            mirror_box.setChecked(true);
+        if(split.equals("split:")){
+            split_box.setChecked(true);
+            split_box.jumpDrawablesToCurrentState();
+            Log.d("FCM", "setting split checked: " + split_box.isChecked());
         }
         change_background();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
     }
 
     private void change_background(){
@@ -138,7 +142,7 @@ public class FullRainbowMode extends PacemakerMode {
         rainbow_bar.getProgressDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
         rainbow_bar.getThumb().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
 
-        mirror_box.setTextColor(Color.WHITE);
+        split_box.setTextColor(Color.WHITE);
         ColorStateList colorStateList = new ColorStateList(
                 new int[][] {
                         new int[] { -android.R.attr.state_checked }, // unchecked
@@ -149,7 +153,7 @@ public class FullRainbowMode extends PacemakerMode {
                         Color.WHITE
                 }
         );
-        mirror_box.setSupportButtonTintList(colorStateList);
+        split_box.setSupportButtonTintList(colorStateList);
 
         //draw background in rainbow colors
         GradientDrawable rainbow = new GradientDrawable(GradientDrawable.Orientation.TL_BR,
@@ -158,7 +162,25 @@ public class FullRainbowMode extends PacemakerMode {
     }
 
     public void send_configs() {
-        ((MainActivity)getActivity()).send_config(mirror + "rainbow:" + speed + " " + rainbowness + " " + brightness + "\n");
+        ((MainActivity)getActivity()).send_config(split + "rainbow:" + speed + " " + rainbowness + " " + brightness + "\n");
+    }
+
+    protected PacemakerModeConfig store_configs() {
+        PacemakerModeConfig conf = new PacemakerModeConfig(ID);
+        conf.setBrightness(brightness);
+        conf.setRainbowness(rainbowness);
+        conf.setSpeed(speed);
+        conf.setSplit(split);
+        return conf;
+    }
+
+    protected void load_configs(PacemakerModeConfig conf){
+        if(conf != null){
+            this.brightness = conf.getBrightness();
+            this.split = conf.getSplit();
+            this.rainbowness = conf.getRainbowness();
+            this.speed = conf.getSpeed();
+        }
     }
 
 }

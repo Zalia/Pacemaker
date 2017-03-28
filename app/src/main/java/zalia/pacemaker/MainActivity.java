@@ -26,7 +26,9 @@ import android.widget.Spinner;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -51,14 +53,16 @@ public class MainActivity extends AppCompatActivity {
     private BroadcastReceiver bt_scan_receiver = null;
 
     private PacemakerMode active_mode;
-    //keep references to each mode to keep configurations
-    private ColorPickerMode color_picker_mode;
-    private FadingMode fading_mode;
-    private MeteorMode meteor_mode;
-    private FullRainbowMode rainbow_mode;
-    private RandomMeteorMode random_meteor_mode;
-    private CreativeMode creative_mode;
-    private TestMode test_mode;
+
+    private Map<Integer, PacemakerModeConfig> configs;
+
+    public static final int COLORPICKER = 0;
+    public static final int FADING = 1;
+    public static final int RAINBOW = 2;
+    public static final int METEOR = 3;
+    public static final int RANDOM = 4;
+    public static final int CREATIVE = 5;
+    public static final int TEST = 6;
 
 
     @Override
@@ -67,55 +71,46 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "in onCreate() ...");
         setContentView(R.layout.activity_main);
 
+        //setup config map
+        configs = new HashMap<>();
+
         //setup mode selection dropdown menu
         Spinner spinner = (Spinner) findViewById(R.id.modes_dropdown);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int index, long id) {
-                //load current mode's layout
+                //save configs from the last mode
+                if(active_mode != null){
+                    Log.d("MAIN", "storing config:");
+                    PacemakerModeConfig tmp = active_mode.store_configs();
+                    configs.put(tmp.getId(), tmp);
+                }
+                //load next mode
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 switch (index) {
                     default:
-                    case 0:
-                        //"Konstant"
-//                        if(color_picker_mode == null) color_picker_mode = new ColorPickerMode();
-                        color_picker_mode = new ColorPickerMode();
-                        active_mode = color_picker_mode;
+                    case COLORPICKER: //"Konstant"
+                        active_mode = new ColorPickerMode();
+//                        ((ColorPickerMode)active_mode).load_configs(get_config(COLORPICKER));
                         break;
-                    case 1:
-                        //"Pulsieren"
-//                        if(fading_mode == null) fading_mode = new FadingMode();
-                        fading_mode = new FadingMode();
-                        active_mode = fading_mode;
+                    case FADING: //"Pulsieren"
+                        active_mode = new FadingMode();
+//                        ((FadingMode)active_mode).load_configs(get_config(FADING));
                         break;
-                    case 2:
-                        //"Regenbogen"
-//                        if(rainbow_mode == null) rainbow_mode = new FullRainbowMode();
-                        rainbow_mode = new FullRainbowMode();
-                        active_mode = rainbow_mode;
+                    case RAINBOW: //"Regenbogen"
+                        active_mode = new FullRainbowMode();
                         break;
-                    case 3:
-                        //"Komet"
-//                        if(meteor_mode == null) meteor_mode = new MeteorMode();
-                        meteor_mode = new MeteorMode();
-                        active_mode = meteor_mode;
+                    case METEOR: //"Meteor"
+                        active_mode = new MeteorMode();
                         break;
-                    case 4:
-                        //"Sternenschauer"
-                        if(random_meteor_mode == null) random_meteor_mode = new RandomMeteorMode();
-                        active_mode = random_meteor_mode;
+                    case RANDOM: //"Sternenschauer"
+                        active_mode = new RandomMeteorMode();
                         break;
-                    case 5:
-                        //"Creative Mode"
-//                        if(creative_mode == null) creative_mode = new CreativeMode();
-                        creative_mode = new CreativeMode();
-                        active_mode = creative_mode;
+                    case CREATIVE: //"Creative Mode"
+                        active_mode = new CreativeMode();
                         break;
-                    case 6:
-                        //"Test Mode"
-//                        if(test_mode == null) test_mode = new TestMode();
-                        test_mode = new TestMode();
-                        active_mode = test_mode;
+                    case TEST: //"Test Mode"
+                        active_mode = new TestMode();
                         break;
                 }
                 ft.replace(R.id.frame_layout, active_mode);
@@ -537,6 +532,15 @@ public class MainActivity extends AppCompatActivity {
             } catch (NullPointerException e) {
                 toast("Fatal Error: Bluetooth not active or not supported");
             }
+        }
+    }
+
+    //returns config for the given Mode ID, if there is one. returns null if not
+    protected PacemakerModeConfig get_config(int id){
+        if(configs.containsKey(id)){
+            return configs.get(id);
+        } else {
+            return null;
         }
     }
 

@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import static android.R.attr.id;
+import static zalia.pacemaker.MainActivity.CREATIVE;
 
 
 /**
@@ -28,6 +29,8 @@ import static android.R.attr.id;
  */
 
 public class CreativeMode extends PacemakerMode {
+
+    private final int ID = CREATIVE;
 
     int active_color;
     private boolean initialized = false;
@@ -54,6 +57,7 @@ public class CreativeMode extends PacemakerMode {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         ((MainActivity) getActivity()).findViewById(R.id.pacemaker_layout).setBackgroundColor(Color.WHITE);
 
@@ -155,6 +159,11 @@ public class CreativeMode extends PacemakerMode {
             int color = entry.getValue();
             ((MainActivity) getActivity()).send_config("setpixel " + button_id + " " + color + "\n");
         }
+    }
+
+    public PacemakerModeConfig store_configs(){
+        PacemakerModeConfig conf = new PacemakerModeConfig(ID);
+        return conf;
     }
 
 }

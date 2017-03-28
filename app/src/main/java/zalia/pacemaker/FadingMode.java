@@ -6,6 +6,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatCheckBox;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import static android.R.attr.thumb;
+import static zalia.pacemaker.MainActivity.FADING;
+import static zalia.pacemaker.MainActivity.RAINBOW;
 import static zalia.pacemaker.MainActivity.get_progress_respecting_range;
 import static zalia.pacemaker.MainActivity.normalize_progress;
 
@@ -22,20 +25,25 @@ import static zalia.pacemaker.MainActivity.normalize_progress;
 
 public class FadingMode extends ColorPickerMode {
 
+    private final int ID = FADING;
+
     private static final int MIN_SPEED = 1000;
     private static final int MAX_SPEED = 50;
 
     private SeekBar speed_bar;
     private AppCompatCheckBox heartbeat_box;
 
-    //default settings
-    private int speed = 400;
-    private String heartbeat = "0";
-    //change default color in onCreateView!
+    private int speed;
+    private String heartbeat;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
+        //default settings
+        this.speed = 400;
+        this.heartbeat = "0";
 //        current_color = Color.rgb(255, 255, 255);
+        //load settings if present
+        load_configs(((MainActivity)getActivity()).get_config(ID));
         return inflater.inflate(R.layout.fading_layout, parent, false);
     }
 
@@ -73,6 +81,7 @@ public class FadingMode extends ColorPickerMode {
         });
         if(heartbeat.equals("1")){
             heartbeat_box.setChecked(true);
+            heartbeat_box.jumpDrawablesToCurrentState();
         }
         change_background(current_color);
     }
@@ -113,4 +122,23 @@ public class FadingMode extends ColorPickerMode {
     public void send_configs(){
         ((MainActivity)getActivity()).send_config("fillcolor:" + speed + " " + this.getRGB() + " " + heartbeat + "\n");
     }
+
+    @Override
+    protected PacemakerModeConfig store_configs(){
+        PacemakerModeConfig conf = new PacemakerModeConfig(ID);
+        conf.setColor(current_color);
+        conf.setSpeed(speed);
+        conf.setHeartbeat(heartbeat);
+        return conf;
+    }
+
+    @Override
+    protected void load_configs(PacemakerModeConfig conf){
+        if(conf != null) {
+            this.current_color = conf.getColor();
+            this.speed = conf.getSpeed();
+            this.heartbeat = conf.getHeartbeat();
+        }
+    }
+
 }

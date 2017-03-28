@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
 
+import static zalia.pacemaker.MainActivity.RANDOM;
 import static zalia.pacemaker.MainActivity.get_progress_respecting_range;
 import static zalia.pacemaker.MainActivity.normalize_progress;
 
@@ -18,13 +19,14 @@ import static zalia.pacemaker.MainActivity.normalize_progress;
 
 public class RandomMeteorMode extends PacemakerMode {
 
+    private static final int ID = RANDOM;
+
     private static final int MIN_BRIGHTNESS = 0;
     private static final int MAX_BRIGHTNESS = 1;
 
     //default config
     private double brightness = 1.0;
 
-    private boolean initialized = false;
 
     private SeekBar brightness_bar;
 
@@ -35,24 +37,25 @@ public class RandomMeteorMode extends PacemakerMode {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        if(!initialized) {
-            brightness_bar = (SeekBar) view.findViewById(R.id.brightness_slider);
-            brightness_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                @Override
-                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    brightness = normalize_progress(progress, MIN_BRIGHTNESS, MAX_BRIGHTNESS);
-                    send_configs();
-                }
+        load_configs(((MainActivity)getActivity()).get_config(ID));
 
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {
-                }
+        brightness_bar = (SeekBar) view.findViewById(R.id.brightness_slider);
+        brightness_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                brightness = normalize_progress(progress, MIN_BRIGHTNESS, MAX_BRIGHTNESS);
+                send_configs();
+            }
 
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
-                }
-            });
-        }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+
         //set current config
         brightness_bar.setProgress(get_progress_respecting_range(brightness, MIN_BRIGHTNESS, MAX_BRIGHTNESS));
         change_background();
@@ -72,5 +75,17 @@ public class RandomMeteorMode extends PacemakerMode {
     @Override
     public void send_configs() {
         ((MainActivity)getActivity()).send_config("shower:" + brightness + "\n");
+    }
+
+    protected PacemakerModeConfig store_configs(){
+        PacemakerModeConfig conf = new PacemakerModeConfig(ID);
+        conf.setBrightness(brightness);
+        return conf;
+    }
+
+    protected void load_configs(PacemakerModeConfig conf){
+        if(conf != null){
+            this.brightness = conf.getBrightness();
+        }
     }
 }

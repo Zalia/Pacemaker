@@ -13,6 +13,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import static android.R.attr.thumb;
+import static zalia.pacemaker.MainActivity.METEOR;
 import static zalia.pacemaker.MainActivity.get_progress_respecting_range;
 import static zalia.pacemaker.MainActivity.normalize_progress;
 
@@ -21,6 +22,8 @@ import static zalia.pacemaker.MainActivity.normalize_progress;
  */
 
 public class MeteorMode extends ColorPickerMode {
+
+    private final int ID = METEOR;
 
     private static final int MIN_SPEED = 1000;
     private static final int MAX_SPEED = 10;
@@ -31,15 +34,19 @@ public class MeteorMode extends ColorPickerMode {
     private SeekBar length_bar;
     private AppCompatCheckBox split_box;
 
-    //default settings
-    private int speed = 400;
-    private int length = 40;
-    private String split = "split:";
-    //change default color in onCreateView!
+    private int speed;
+    private int length;
+    private String split;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
+        //default settings
+        speed = 400;
+        length = 40;
+        split = "split:";
 //        current_color = Color.rgb(255, 255, 255);
+        //load configs if present
+        load_configs(((MainActivity)getActivity()).get_config(ID));
         return inflater.inflate(R.layout.meteor_layout, parent, false);
     }
 
@@ -96,6 +103,7 @@ public class MeteorMode extends ColorPickerMode {
         });
         if(split.equals("split:")){
             split_box.setChecked(true);
+            split_box.jumpDrawablesToCurrentState();
         }
 
         change_background(current_color);
@@ -140,4 +148,23 @@ public class MeteorMode extends ColorPickerMode {
         ((MainActivity)getActivity()).send_config("split:meteor:" + speed + " " + length + " " + getRGB() + "\n");
     }
 
+    @Override
+    protected PacemakerModeConfig store_configs(){
+        PacemakerModeConfig conf = new PacemakerModeConfig(ID);
+        conf.setColor(current_color);
+        conf.setSpeed(speed);
+        conf.setSplit(split);
+        conf.setLength(length);
+        return conf;
+    }
+
+    @Override
+    protected void load_configs(PacemakerModeConfig conf){
+        if(conf != null) {
+            this.current_color = conf.getColor();
+            this.speed = conf.getSpeed();
+            this.split = conf.getSplit();
+            this.length = conf.getLength();
+        }
+    }
 }

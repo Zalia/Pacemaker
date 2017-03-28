@@ -9,11 +9,15 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.RadioGroup;
 
+import static zalia.pacemaker.MainActivity.TEST;
+
 /**
  * Created by Zalia on 18.02.2017.
  */
 
 public class TestMode extends PacemakerMode {
+
+    private final int ID = TEST;
 
     private View root;
     private RadioGroup radio_group;
@@ -89,6 +93,11 @@ public class TestMode extends PacemakerMode {
     @Override
     public void send_configs() {
         ((MainActivity)getActivity()).send_config(mirror + "fillcolour:" + active_color + "\n");
+    }
+
+    protected PacemakerModeConfig store_configs(){
+        PacemakerModeConfig conf = new PacemakerModeConfig(ID);
+        return conf;
     }
 
 }
