@@ -1,10 +1,12 @@
 package zalia.pacemaker;
 
+import java.io.Serializable;
+
 /**
  * Created by Zalia on 28.03.2017.
  */
 
-public class PacemakerModeConfig {
+public class PacemakerModeConfig implements Serializable{
 
     private int id;
     private int color;

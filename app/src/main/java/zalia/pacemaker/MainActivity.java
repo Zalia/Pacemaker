@@ -1,5 +1,6 @@
 package zalia.pacemaker;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -12,7 +13,9 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.ParcelUuid;
+import android.provider.MediaStore;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,7 +26,13 @@ import android.widget.Button;
 import android.widget.Toast;
 import android.widget.Spinner;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,6 +40,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+
+import static android.os.Build.ID;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -40,12 +51,13 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "Pacemaker";
     private static final UUID HEARTBEAT_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     private static final boolean ONLY_SHHOW_HEARTBEAT_DEVICES = false;
+    private static final String savefile = "pacemaker.save";
+
 //    private String heartbeat_mac = "98:D3:31:FB:21:45";
     private String heartbeat_mac = null;
     private BluetoothAdapter btAdapter = null;
     private BluetoothSocket btSocket = null;
     private OutputStream outStream = null;
-
     private ProgressDialog progress = null;
     private AlertDialog paired_dialog = null;
     private AlertDialog discovered_dialog = null;
@@ -71,8 +83,26 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "in onCreate() ...");
         setContentView(R.layout.activity_main);
 
-        //setup config map
-        configs = new HashMap<>();
+        //attempt to restore old config map
+        File file = new File(context.getFilesDir(), savefile);
+        try {
+            FileInputStream fileIn = new FileInputStream(file);
+            try {
+                ObjectInputStream objIn = new ObjectInputStream(fileIn);
+                configs = (HashMap<Integer, PacemakerModeConfig>) objIn.readObject();
+                objIn.close();
+                fileIn.close();
+                Log.d(ID, "Successfully loaded "+ configs.size()+" settings");
+            }catch(IOException e){
+                Log.e(ID, "Could not load settings from file, loading default.");
+                configs = new HashMap<>();
+            }catch(ClassNotFoundException i){
+                Log.e(ID, "HashMap class not found");
+            }
+        }catch(FileNotFoundException e){
+            Log.d(ID, "Could not find settings file, loading default.");
+            configs = new HashMap<>();
+        }
 
         //setup mode selection dropdown menu
         Spinner spinner = (Spinner) findViewById(R.id.modes_dropdown);
@@ -178,6 +208,28 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onStop(){
+        super.onStop();
+
+//        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_INTERNAL_STORAGE);
+
+        //store configs
+        PacemakerModeConfig active_conf = active_mode.store_configs();
+        configs.put(active_conf.getId(), active_conf);
+        File file = new File(context.getFilesDir(), savefile);
+        try {
+            FileOutputStream fileOut = new FileOutputStream(file, false);
+            ObjectOutputStream objOut = new ObjectOutputStream(fileOut);
+            objOut.writeObject(configs);
+            objOut.close();
+            fileOut.close();
+            Log.d(ID, "Successfully saved settings");
+        }catch(IOException i){
+            Log.e(ID, "Could not save settings");
+        }
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         try {
@@ -260,10 +312,14 @@ public class MainActivity extends AppCompatActivity {
                         Log.d(TAG, "Exception while attempting to dismiss paired devices dialog. It propably was not active in which case everything is fine.");
                     }
                     disableConnect();
+                    PacemakerModeConfig mac_config = new PacemakerModeConfig(-1);
+                    mac_config.setHeartbeat(heartbeat_mac);
+                    configs.put(-1, mac_config);
                 }else{
                     toast("Verbindungsversuch fehlgeschlagen.");
                     enableConnect();
                     heartbeat_mac = null;
+                    configs.remove(-1);
                 }
                 progress.dismiss();
             }
