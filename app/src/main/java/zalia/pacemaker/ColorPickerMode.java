@@ -2,7 +2,6 @@ package zalia.pacemaker;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,11 +26,6 @@ public class ColorPickerMode extends PacemakerMode {
 
     //default settings
     protected int current_color = Color.rgb(204,65,36);
-
-    public ColorPickerMode(){
-        //get configs if existing
-        Log.d("CPM", "called color picker constructor");
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
@@ -93,7 +87,7 @@ public class ColorPickerMode extends PacemakerMode {
     protected void load_configs(PacemakerModeConfig conf){
         if(conf != null) {
             this.current_color = conf.getColor();
-            Log.d("CMP", "loading configs: " + Color.red(conf.getColor()) + " " + Color.blue(conf.getColor()) + " " + Color.green(conf.getColor()));
+//            Log.d("CMP", "loading configs: " + Color.red(conf.getColor()) + " " + Color.blue(conf.getColor()) + " " + Color.green(conf.getColor()));
         }
     }
 }

@@ -1,6 +1,5 @@
 package zalia.pacemaker;
 
-import android.Manifest;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -12,19 +11,17 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.ParcelUuid;
-import android.provider.MediaStore;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.Toast;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -40,8 +37,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-
-import static android.os.Build.ID;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -92,15 +87,19 @@ public class MainActivity extends AppCompatActivity {
                 configs = (HashMap<Integer, PacemakerModeConfig>) objIn.readObject();
                 objIn.close();
                 fileIn.close();
-                Log.d(ID, "Successfully loaded "+ configs.size()+" settings");
+                Log.d(TAG, "Successfully loaded "+ configs.size()+" configs");
+                //retrieve MAC address
+                if(configs.containsKey(-1)){
+                    heartbeat_mac = configs.get(-1).getHeartbeat();
+                }
             }catch(IOException e){
-                Log.e(ID, "Could not load settings from file, loading default.");
+                Log.e(TAG, "Could not load configs from file, loading default.");
                 configs = new HashMap<>();
             }catch(ClassNotFoundException i){
-                Log.e(ID, "HashMap class not found");
+                Log.e(TAG, "HashMap class not found");
             }
         }catch(FileNotFoundException e){
-            Log.d(ID, "Could not find settings file, loading default.");
+            Log.d(TAG, "Could not find configs file, loading default.");
             configs = new HashMap<>();
         }
 
@@ -111,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int index, long id) {
                 //save configs from the last mode
                 if(active_mode != null){
-                    Log.d("MAIN", "storing config:");
+//                    Log.d("MAIN", "saving config");
                     PacemakerModeConfig tmp = active_mode.store_configs();
                     configs.put(tmp.getId(), tmp);
                 }
@@ -210,6 +209,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStop(){
         super.onStop();
+        Log.d(TAG, "in onStop() ...");
 
 //        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_INTERNAL_STORAGE);
 
@@ -223,15 +223,16 @@ public class MainActivity extends AppCompatActivity {
             objOut.writeObject(configs);
             objOut.close();
             fileOut.close();
-            Log.d(ID, "Successfully saved settings");
+            Log.d(TAG, "Successfully saved configs");
         }catch(IOException i){
-            Log.e(ID, "Could not save settings");
+            Log.e(TAG, "Could not save configs");
         }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.d(TAG, "in onDestroy() ...");
         try {
             unregisterReceiver(bt_scan_receiver);
         }
@@ -576,7 +577,7 @@ public class MainActivity extends AppCompatActivity {
 
     //send the config string of the currently active PacemakerMode via bluetooth to the heartbeat device
     protected void send_config(String config) {
-        Log.d(TAG, "Config generiert: '" + config + "'");
+        Log.d(TAG, "Generated config: '" + config.trim() + "'");
         if(btSocket != null) {
             try {
                 byte[] msgBuffer = config.getBytes();

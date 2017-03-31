@@ -1,9 +1,7 @@
 package zalia.pacemaker;
 
 import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.view.LayoutInflater;
@@ -12,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import static android.R.attr.thumb;
 import static zalia.pacemaker.MainActivity.METEOR;
 import static zalia.pacemaker.MainActivity.get_progress_respecting_range;
 import static zalia.pacemaker.MainActivity.normalize_progress;
@@ -145,7 +142,7 @@ public class MeteorMode extends ColorPickerMode {
 
     //currently does NOT include color and random state!
     public void send_configs(){
-        ((MainActivity)getActivity()).send_config("split:meteor:" + speed + " " + length + " " + getRGB() + "\n");
+        ((MainActivity)getActivity()).send_config(split + "meteor:" + speed + " " + length + " " + getRGB() + "\n");
     }
 
     @Override

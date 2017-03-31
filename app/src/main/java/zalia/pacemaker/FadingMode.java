@@ -1,21 +1,16 @@
 package zalia.pacemaker;
 
 import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatCheckBox;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import static android.R.attr.thumb;
 import static zalia.pacemaker.MainActivity.FADING;
-import static zalia.pacemaker.MainActivity.RAINBOW;
 import static zalia.pacemaker.MainActivity.get_progress_respecting_range;
 import static zalia.pacemaker.MainActivity.normalize_progress;
 
