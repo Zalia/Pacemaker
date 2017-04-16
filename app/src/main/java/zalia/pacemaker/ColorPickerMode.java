@@ -39,8 +39,8 @@ public class ColorPickerMode extends PacemakerMode {
         super.onViewCreated(view, savedInstanceState);
 
         //setup listeners
-        colorPickerView = (ColorPickerView) view.findViewById(R.id.color_picker_view);
-        lightness_slider = (LightnessSlider) view.findViewById(R.id.color_picker_lightness);
+        colorPickerView = (CustomColorPickerView) view.findViewById(R.id.color_picker_view);
+        lightness_slider = (CustomLightnessSlider) view.findViewById(R.id.color_picker_lightness);
         colorPickerView.addOnColorChangedListener(new OnColorChangedListener() {
             @Override
             public void onColorChanged(int selectedColor) {
@@ -80,14 +80,13 @@ public class ColorPickerMode extends PacemakerMode {
 
     protected PacemakerModeConfig store_configs(){
         PacemakerModeConfig conf = new PacemakerModeConfig(ID);
-        conf.setColor(current_color);
+        conf.setIval1(current_color);
         return conf;
     }
 
     protected void load_configs(PacemakerModeConfig conf){
         if(conf != null) {
-            this.current_color = conf.getColor();
-//            Log.d("CMP", "loading configs: " + Color.red(conf.getColor()) + " " + Color.blue(conf.getColor()) + " " + Color.green(conf.getColor()));
+            this.current_color = conf.getIval1();
         }
     }
 }

@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import static android.R.attr.mode;
 import static zalia.pacemaker.MainActivity.FADING;
 import static zalia.pacemaker.MainActivity.get_progress_respecting_range;
 import static zalia.pacemaker.MainActivity.normalize_progress;
@@ -35,7 +36,7 @@ public class FadingMode extends ColorPickerMode {
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
         //default settings
         this.speed = 400;
-        this.heartbeat = "0";
+        this.heartbeat = "fillcolour";
 //        current_color = Color.rgb(255, 255, 255);
         //load settings if present
         load_configs(((MainActivity)getActivity()).get_config(ID));
@@ -70,11 +71,11 @@ public class FadingMode extends ColorPickerMode {
         heartbeat_box.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                heartbeat = ((AppCompatCheckBox)v).isChecked() ? "1" : "0";
+                heartbeat = ((AppCompatCheckBox)v).isChecked() ? "heartbeat" : "fillcolour";
                 send_configs();
             }
         });
-        if(heartbeat.equals("1")){
+        if(heartbeat.equals("heartbeat")){
             heartbeat_box.setChecked(true);
             heartbeat_box.jumpDrawablesToCurrentState();
         }
@@ -115,24 +116,24 @@ public class FadingMode extends ColorPickerMode {
 
     //currently does NOT include color and random state!
     public void send_configs(){
-        ((MainActivity)getActivity()).send_config("fillcolor:" + speed + " " + this.getRGB() + " " + heartbeat + "\n");
+        ((MainActivity) getActivity()).send_config(heartbeat + ":" + speed + " " + this.getRGB() + "\n");
     }
 
     @Override
     protected PacemakerModeConfig store_configs(){
         PacemakerModeConfig conf = new PacemakerModeConfig(ID);
-        conf.setColor(current_color);
-        conf.setSpeed(speed);
-        conf.setHeartbeat(heartbeat);
+        conf.setIval1(current_color);
+        conf.setIval2(speed);
+        conf.setSval1(heartbeat);
         return conf;
     }
 
     @Override
     protected void load_configs(PacemakerModeConfig conf){
         if(conf != null) {
-            this.current_color = conf.getColor();
-            this.speed = conf.getSpeed();
-            this.heartbeat = conf.getHeartbeat();
+            this.current_color = conf.getIval1();
+            this.speed = conf.getIval2();
+            this.heartbeat = conf.getSval1();
         }
     }
 

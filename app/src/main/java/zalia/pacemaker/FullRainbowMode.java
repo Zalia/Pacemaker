@@ -167,19 +167,19 @@ public class FullRainbowMode extends PacemakerMode {
 
     protected PacemakerModeConfig store_configs() {
         PacemakerModeConfig conf = new PacemakerModeConfig(ID);
-        conf.setBrightness(brightness);
-        conf.setRainbowness(rainbowness);
-        conf.setSpeed(speed);
-        conf.setSplit(split);
+        conf.setDval1(brightness);
+        conf.setIval1(rainbowness);
+        conf.setIval2(speed);
+        conf.setSval1(split);
         return conf;
     }
 
     protected void load_configs(PacemakerModeConfig conf){
         if(conf != null){
-            this.brightness = conf.getBrightness();
-            this.split = conf.getSplit();
-            this.rainbowness = conf.getRainbowness();
-            this.speed = conf.getSpeed();
+            this.brightness = conf.getDval1();
+            this.rainbowness = conf.getIval1();
+            this.speed = conf.getIval2();
+            this.split = conf.getSval1();
         }
     }
 

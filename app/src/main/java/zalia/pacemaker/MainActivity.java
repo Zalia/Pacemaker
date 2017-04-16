@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "Successfully loaded "+ configs.size()+" configs");
                 //retrieve MAC address
                 if(configs.containsKey(-1)){
-                    heartbeat_mac = configs.get(-1).getHeartbeat();
+                    heartbeat_mac = configs.get(-1).getSval1();
                 }
             }catch(IOException e){
                 Log.e(TAG, "Could not load configs from file, loading default.");
@@ -314,7 +314,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     disableConnect();
                     PacemakerModeConfig mac_config = new PacemakerModeConfig(-1);
-                    mac_config.setHeartbeat(heartbeat_mac);
+                    mac_config.setSval1(heartbeat_mac);
                     configs.put(-1, mac_config);
                 }else{
                     toast("Verbindungsversuch fehlgeschlagen.");

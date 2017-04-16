@@ -18,13 +18,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:text="Helligkeit"
+            android:text="Intensität"
             android:textColor="#FFF" />
 
         <SeekBar
-            android:id="@+id/brightness_slider"
+            android:id="@+id/intensity_slider"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
+        <android.support.v7.widget.AppCompatCheckBox
+            android:id="@+id/split_checkbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="3dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="20dp"
+            android:text="Symmetrisch"
+            android:textColor="#000"/>
 
     </LinearLayout>
 </ScrollView>

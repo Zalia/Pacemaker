@@ -2,6 +2,8 @@ package zalia.pacemaker;
 
 import java.io.Serializable;
 
+import static android.R.attr.id;
+
 /**
  * Created by Zalia on 28.03.2017.
  */
@@ -9,13 +11,11 @@ import java.io.Serializable;
 public class PacemakerModeConfig implements Serializable{
 
     private int id;
-    private int color;
-    private int speed;
-    private int rainbowness;
-    private int length;
-    private double brightness;
-    private String split;
-    private String heartbeat;
+    private int ival1;
+    private int ival2;
+    private int ival3;
+    private double dval1;
+    private String sval1;
 
     public PacemakerModeConfig(int id){
         this.id = id;
@@ -29,59 +29,44 @@ public class PacemakerModeConfig implements Serializable{
         this.id = id;
     }
 
-    public int getColor() {
-        return color;
+    public int getIval1() {
+        return ival1;
     }
 
-    public void setColor(int color) {
-        this.color = color;
+    public void setIval1(int ival1) {
+        this.ival1 = ival1;
     }
 
-    public int getSpeed() {
-        return speed;
+    public int getIval2() {
+        return ival2;
     }
 
-    public void setSpeed(int speed) {
-        this.speed = speed;
+    public void setIval2(int ival2) {
+        this.ival2 = ival2;
     }
 
-    public int getRainbowness() {
-        return rainbowness;
+    public int getIval3() {
+        return ival3;
     }
 
-    public void setRainbowness(int rainbowness) {
-        this.rainbowness = rainbowness;
+    public void setIval3(int ival3) {
+        this.ival3 = ival3;
     }
 
-    public double getBrightness() {
-        return brightness;
+    public double getDval1() {
+        return dval1;
     }
 
-    public void setBrightness(double brightness) {
-        this.brightness = brightness;
+    public void setDval1(double dval1) {
+        this.dval1 = dval1;
     }
 
-    public String getSplit() {
-        return split;
+    public String getSval1() {
+        return sval1;
     }
 
-    public void setSplit(String split) {
-        this.split = split;
+    public void setSval1(String sval1) {
+        this.sval1 = sval1;
     }
 
-    public String getHeartbeat() {
-        return heartbeat;
-    }
-
-    public void setHeartbeat(String heartbeat) {
-        this.heartbeat = heartbeat;
-    }
-
-    public int getLength() {
-        return length;
-    }
-
-    public void setLength(int length) {
-        this.length = length;
-    }
 }

@@ -5,10 +5,14 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 
 import com.flask.colorpicker.ColorPickerView;
 import com.flask.colorpicker.OnColorSelectedListener;
@@ -30,10 +34,11 @@ import static zalia.pacemaker.MainActivity.CREATIVE;
 public class CreativeMode extends PacemakerMode {
 
     private final int ID = CREATIVE;
+    private final int NUM_LEDS = 120;
 
     int active_color;
     private boolean initialized = false;
-    private List<Button> buttons;
+    private List<ColorButton> buttons;
     private Button color_picker_dialog_button;
     private static final int[] BUTTON_IDS = {
             R.id.buttonT,
@@ -45,6 +50,7 @@ public class CreativeMode extends PacemakerMode {
             R.id.buttonl3,
             R.id.buttonr3,
     };
+    RelativeLayout layout;
     private Map<Integer, Integer> button_colors;
 
 
@@ -93,7 +99,8 @@ public class CreativeMode extends PacemakerMode {
                                 public void onClick(DialogInterface dialog, int selectedColor, Integer[] allColors) {
                                     active_color = selectedColor;
                                     Drawable bgShape = color_picker_dialog_button.getBackground();
-                                    bgShape.setColorFilter(selectedColor, PorterDuff.Mode.MULTIPLY);
+                                    bgShape.setColorFilter(selectedColor, PorterDuff.Mode.SRC_IN);
+                                    Log.d("CM", "set color to " + active_color);
                                 }
                             })
                             .setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
@@ -106,49 +113,53 @@ public class CreativeMode extends PacemakerMode {
                 }
             });
 
+            //set onTouch of Layout that invokes OnClick Events for buttons with matching ID
+//            layout = (RelativeLayout) view.findViewById(R.id.creative_layout);
+//            layout.setOnTouchListener(new View.OnTouchListener() {
+//                @Override
+//                public boolean onTouch(View v, MotionEvent event) {
+//                    switch(event.getAction()){
+//                        case MotionEvent.ACTION_MOVE:
+//                            float x = event.getRawX();
+//                            float y = event.getRawY();
+//
+//                            MotionEvent click_event = MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis()+10, MotionEvent.ACTION_DOWN, x, y, 0);
+//                            ((MainActivity)getActivity()).dispatchTouchEvent(click_event);
+//                            break;
+//                    }
+//                    return false;
+//                }
+//            });
+
             //setup LED section buttons
             for (int id : BUTTON_IDS) {
-                Button button = (Button) view.findViewById(id);
+                ColorButton button = (ColorButton) view.findViewById(id);
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        String id = "";
                         button_colors.put(v.getId(), active_color);
-                        switch (v.getId()) {
-                            case R.id.buttonT:
-                                id = "top";
-                                break;
-                            case R.id.buttonl1:
-                                id = "l1";
-                                break;
-                            case R.id.buttonl2:
-                                id = "l2";
-                                break;
-                            case R.id.buttonl3:
-                                id = "l3";
-                                break;
-                            case R.id.buttonB:
-                                id = "bot";
-                                break;
-                            case R.id.buttonr1:
-                                id = "r1";
-                                break;
-                            case R.id.buttonr2:
-                                id = "r2";
-                                break;
-                            case R.id.buttonr3:
-                                id = "r3";
-                                break;
-                        }
                         Drawable bgShape = v.getBackground();
                         bgShape.setColorFilter(active_color, PorterDuff.Mode.MULTIPLY);
-                        ((MainActivity) getActivity()).send_config("setpixel " + id + " " + active_color + "\n");
+                        color_segment(v.getId());
+                        ((ColorButton) v).change_color(active_color);
+                    }
+                });
+                button.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        Log.d("button", event.toString());
+                        return false;
                     }
                 });
                 buttons.add(button);
             }
             initialized = true;
         }
+    }
+
+    //set all leds that correspond to the current ColorButton
+    private void color_segment(int id){
+        ((MainActivity) getActivity()).send_config("setpixel " + id + " " + active_color + "\n");
     }
 
     @Override
@@ -164,5 +175,4 @@ public class CreativeMode extends PacemakerMode {
         PacemakerModeConfig conf = new PacemakerModeConfig(ID);
         return conf;
     }
-
 }

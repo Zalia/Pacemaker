@@ -35,7 +35,7 @@
                 app:lightnessSliderView="@+id/color_picker_lightness"
                 app:wheelType="FLOWER" />
 
-            <com.flask.colorpicker.slider.LightnessSlider
+            <zalia.pacemaker.CustomLightnessSlider
                 android:id="@id/color_picker_lightness"
                 android:layout_width="match_parent"
                 android:layout_height="32dp"

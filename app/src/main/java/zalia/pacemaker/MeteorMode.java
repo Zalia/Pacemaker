@@ -148,20 +148,21 @@ public class MeteorMode extends ColorPickerMode {
     @Override
     protected PacemakerModeConfig store_configs(){
         PacemakerModeConfig conf = new PacemakerModeConfig(ID);
-        conf.setColor(current_color);
-        conf.setSpeed(speed);
-        conf.setSplit(split);
-        conf.setLength(length);
+        conf.setIval1(current_color);
+        conf.setIval2(speed);
+        conf.setIval3(length);
+        conf.setSval1(split);
+
         return conf;
     }
 
     @Override
     protected void load_configs(PacemakerModeConfig conf){
         if(conf != null) {
-            this.current_color = conf.getColor();
-            this.speed = conf.getSpeed();
-            this.split = conf.getSplit();
-            this.length = conf.getLength();
+            this.current_color = conf.getIval1();
+            this.speed = conf.getIval2();
+            this.length = conf.getIval3();
+            this.split = conf.getSval1();
         }
     }
 }
