@@ -24,7 +24,7 @@ public class MeteorMode extends ColorPickerMode {
 
     private static final int MIN_SPEED = 1000;
     private static final int MAX_SPEED = 10;
-    private static final int MIN_LENGTH = 10;
+    private static final int MIN_LENGTH = 5;
     private static final int MAX_LENGTH = 100;
 
     private SeekBar speed_bar;

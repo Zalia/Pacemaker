@@ -35,7 +35,7 @@ public class FadingMode extends ColorPickerMode {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
         //default settings
-        this.speed = 400;
+        this.speed = 200;
         this.heartbeat = "fillcolour";
 //        current_color = Color.rgb(255, 255, 255);
         //load settings if present

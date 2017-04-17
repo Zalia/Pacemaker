@@ -3,6 +3,7 @@ package zalia.pacemaker;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -21,9 +22,13 @@ import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import static android.R.attr.button;
+import static android.R.attr.id;
+import static android.R.attr.key;
 import static zalia.pacemaker.MainActivity.CREATIVE;
 
 
@@ -37,19 +42,10 @@ public class CreativeMode extends PacemakerMode {
     private final int NUM_LEDS = 120;
 
     int active_color;
-    private boolean initialized = false;
-    private List<ColorButton> buttons;
     private Button color_picker_dialog_button;
-    private static final int[] BUTTON_IDS = {
-            R.id.buttonT,
-            R.id.buttonB,
-            R.id.buttonl1,
-            R.id.buttonr1,
-            R.id.buttonl2,
-            R.id.buttonr2,
-            R.id.buttonl3,
-            R.id.buttonr3,
-    };
+    private List<Integer> button_ids;
+    //Note: the actual name of the view an id belongs to can be retreived like this:
+    //String id = view.getResources().getResourceName(child.getId());
     RelativeLayout layout;
     private Map<Integer, Integer> button_colors;
 
@@ -64,100 +60,84 @@ public class CreativeMode extends PacemakerMode {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        //set background to white
         ((MainActivity) getActivity()).findViewById(R.id.pacemaker_layout).setBackgroundColor(Color.WHITE);
 
-        if(!initialized) {
-            //default settings
-            active_color = Color.WHITE;
-            if (buttons == null) buttons = new ArrayList<>();
-            button_colors = new HashMap<>();
-            for(int bid : BUTTON_IDS){
-                button_colors.put(bid, Color.BLACK);
+        //get a list of all buttons
+        button_ids = new LinkedList<>();
+        RelativeLayout layout = (RelativeLayout)view.findViewById(R.id.creative_layout);
+        for(int index=0; index<layout.getChildCount(); index++){
+            View child = layout.getChildAt(index);
+            if (child instanceof Button && child != view.findViewById(R.id.color_picker_dialog_button)) {
+                button_ids.add(child.getId());
             }
-            send_configs();
+        }
 
-            //setup color picker dialog
-            color_picker_dialog_button = (Button) view.findViewById(R.id.color_picker_dialog_button);
-            color_picker_dialog_button.setOnClickListener(new View.OnClickListener() {
+        //default settings
+        active_color = Color.rgb(204,65,36);
+        button_colors = new HashMap<>();
+        for(int bid : button_ids){
+            button_colors.put(bid, Color.rgb(204,65,36));
+        }
+        load_configs(((MainActivity)getActivity()).get_config(ID));
+
+        //setup color picker dialog
+        color_picker_dialog_button = (Button) view.findViewById(R.id.color_picker_dialog_button);
+        color_picker_dialog_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ColorPickerDialogBuilder
+                        .with(v.getContext())
+                        .setTitle("Farbe wählen:")
+                        .lightnessSliderOnly()
+                        .initialColor(active_color)
+                        .wheelType(ColorPickerView.WHEEL_TYPE.FLOWER)
+                        .density(12)
+                        .setOnColorSelectedListener(new OnColorSelectedListener() {
+                            @Override
+                            public void onColorSelected(int selectedColor) {
+//                                toast("onColorSelected: 0x" + Integer.toHexString(selectedColor));
+                            }
+                        })
+                        .setPositiveButton("Übernehmen", new ColorPickerClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int selectedColor, Integer[] allColors) {
+                                active_color = selectedColor;
+                                color_picker_dialog_button.getBackground().setColorFilter(active_color, PorterDuff.Mode.SRC_IN);
+                                Log.d("CM", "set color to " + active_color);
+                            }
+                        })
+                        .setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        })
+                        .build()
+                        .show();
+            }
+        });
+        color_picker_dialog_button.getBackground().setColorFilter(active_color, PorterDuff.Mode.SRC_IN);
+
+        //setup LED section buttons
+        for (int id : button_ids) {
+            Button button = (Button) view.findViewById(id);
+            //listeners
+            button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ColorPickerDialogBuilder
-                            .with(v.getContext())
-                            .setTitle("Farbe wählen:")
-                            .lightnessSliderOnly()
-                            .initialColor(active_color)
-                            .wheelType(ColorPickerView.WHEEL_TYPE.FLOWER)
-                            .density(12)
-                            .setOnColorSelectedListener(new OnColorSelectedListener() {
-                                @Override
-                                public void onColorSelected(int selectedColor) {
-//                                toast("onColorSelected: 0x" + Integer.toHexString(selectedColor));
-                                }
-                            })
-                            .setPositiveButton("Übernehmen", new ColorPickerClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int selectedColor, Integer[] allColors) {
-                                    active_color = selectedColor;
-                                    Drawable bgShape = color_picker_dialog_button.getBackground();
-                                    bgShape.setColorFilter(selectedColor, PorterDuff.Mode.SRC_IN);
-                                    Log.d("CM", "set color to " + active_color);
-                                }
-                            })
-                            .setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                }
-                            })
-                            .build()
-                            .show();
+                    button_colors.put(v.getId(), active_color);
+//                    v.getBackground().setColorFilter(active_color, PorterDuff.Mode.MULTIPLY);
+                    color_segment(v.getId());
+                    ((Button) v).getBackground().setColorFilter(active_color, PorterDuff.Mode.SRC_IN);
                 }
             });
-
-            //set onTouch of Layout that invokes OnClick Events for buttons with matching ID
-//            layout = (RelativeLayout) view.findViewById(R.id.creative_layout);
-//            layout.setOnTouchListener(new View.OnTouchListener() {
-//                @Override
-//                public boolean onTouch(View v, MotionEvent event) {
-//                    switch(event.getAction()){
-//                        case MotionEvent.ACTION_MOVE:
-//                            float x = event.getRawX();
-//                            float y = event.getRawY();
-//
-//                            MotionEvent click_event = MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis()+10, MotionEvent.ACTION_DOWN, x, y, 0);
-//                            ((MainActivity)getActivity()).dispatchTouchEvent(click_event);
-//                            break;
-//                    }
-//                    return false;
-//                }
-//            });
-
-            //setup LED section buttons
-            for (int id : BUTTON_IDS) {
-                ColorButton button = (ColorButton) view.findViewById(id);
-                button.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        button_colors.put(v.getId(), active_color);
-                        Drawable bgShape = v.getBackground();
-                        bgShape.setColorFilter(active_color, PorterDuff.Mode.MULTIPLY);
-                        color_segment(v.getId());
-                        ((ColorButton) v).change_color(active_color);
-                    }
-                });
-                button.setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        Log.d("button", event.toString());
-                        return false;
-                    }
-                });
-                buttons.add(button);
-            }
-            initialized = true;
+            //set default or loaded color
+            button.getBackground().setColorFilter(button_colors.get(id), PorterDuff.Mode.SRC_IN);
         }
+        send_configs();
     }
 
-    //set all leds that correspond to the current ColorButton
+    //set all leds that correspond to the current Button
     private void color_segment(int id){
         ((MainActivity) getActivity()).send_config("setpixel " + id + " " + active_color + "\n");
     }
@@ -171,8 +151,17 @@ public class CreativeMode extends PacemakerMode {
         }
     }
 
-    public PacemakerModeConfig store_configs(){
+    protected PacemakerModeConfig store_configs(){
         PacemakerModeConfig conf = new PacemakerModeConfig(ID);
+        conf.setImap(button_colors);
+        conf.setIval1(active_color);
         return conf;
+    }
+
+    protected void load_configs(PacemakerModeConfig config){
+        if(config != null) {
+            this.button_colors = config.getImap();
+            this.active_color = config.getIval1();
+        }
     }
 }

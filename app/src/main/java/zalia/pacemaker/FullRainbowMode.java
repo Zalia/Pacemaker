@@ -30,7 +30,7 @@ public class FullRainbowMode extends PacemakerMode {
     private static final int MIN_BRIGHTNESS = 0;
     private static final int MAX_BRIGHTNESS = 1;
     private static final int MIN_RAINBOWNESS = 0;
-    private static final int MAX_RAINBOWNESS = 10;
+    private static final int MAX_RAINBOWNESS = 5;
 
     //default settings
     private int speed = 400;
