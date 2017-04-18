@@ -156,6 +156,8 @@ public class CreativeMode extends PacemakerMode {
             led_start = (int)Math.round((double)Integer.parseInt(id_string.substring(7)) * segmentsize);
         }else if(id_string.contains("R")){
             led_start = (int) Math.round(((num_buttons / 2.0)* segmentsize) + //left side buttons and top button
+                    //since my numbering pattern starts at the top, but the led strip wraps around the
+                    //bottom and starts from there, the button id has to be inverted
                     Math.round(((num_buttons / 2.0))-(double)Integer.parseInt(id_string.substring(7))) * segmentsize);
         }else if(id_string.equals("buttonB")){
             led_start = (int)Math.round((num_buttons / 2.0)*segmentsize);
@@ -165,7 +167,7 @@ public class CreativeMode extends PacemakerMode {
         }
         led_end = (int)Math.round(led_start + segmentsize);
         for(int i=led_start; i<led_end; i++) {
-            ((MainActivity) getActivity()).send_config("setpixel " + i + " " + color + "\n");
+            ((MainActivity) getActivity()).send_config("setpixel:" + i + " " + color + "\n");
         }
     }
 
