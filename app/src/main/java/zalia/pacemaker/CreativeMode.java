@@ -167,7 +167,8 @@ public class CreativeMode extends PacemakerMode {
         }
         led_end = (int)Math.round(led_start + segmentsize);
         for(int i=led_start; i<led_end; i++) {
-            ((MainActivity) getActivity()).send_config("setpixel:" + i + " " + color + "\n");
+            ((MainActivity) getActivity()).send_config("setpixel:" + i + " " + Color.red(color) +
+                    " " + Color.green(color) + " " + Color.blue(color) + "\n");
         }
     }
 
