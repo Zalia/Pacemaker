@@ -41,12 +41,12 @@ public class CreativeMode extends PacemakerMode {
     private final int ID = CREATIVE;
     private final int NUM_LEDS = 120;
 
+    private int num_buttons;
     int active_color;
     private Button color_picker_dialog_button;
     private List<Integer> button_ids;
     //Note: the actual name of the view an id belongs to can be retreived like this:
     //String id = view.getResources().getResourceName(child.getId());
-    RelativeLayout layout;
     private Map<Integer, Integer> button_colors;
 
 
@@ -68,10 +68,12 @@ public class CreativeMode extends PacemakerMode {
         RelativeLayout layout = (RelativeLayout)view.findViewById(R.id.creative_layout);
         for(int index=0; index<layout.getChildCount(); index++){
             View child = layout.getChildAt(index);
-            if (child instanceof Button && child != view.findViewById(R.id.color_picker_dialog_button)) {
+            String id = view.getResources().getResourceName(child.getId());
+            if(id.startsWith("zalia.pacemaker:id/button")) {
                 button_ids.add(child.getId());
             }
         }
+        num_buttons = button_ids.size();
 
         //default settings
         active_color = Color.rgb(204,65,36);
@@ -125,29 +127,52 @@ public class CreativeMode extends PacemakerMode {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    button_colors.put(v.getId(), active_color);
-//                    v.getBackground().setColorFilter(active_color, PorterDuff.Mode.MULTIPLY);
-                    color_segment(v.getId());
-                    ((Button) v).getBackground().setColorFilter(active_color, PorterDuff.Mode.SRC_IN);
+                    if(active_color != (int)v.getTag()) {
+                        button_colors.put(v.getId(), active_color);
+//                        v.getBackground().setColorFilter(active_color, PorterDuff.Mode.MULTIPLY);
+                        color_segment(v.getId(), active_color);
+                        ((Button) v).getBackground().setColorFilter(active_color, PorterDuff.Mode.SRC_IN);
+                        v.setTag(active_color);
+                    }
                 }
             });
             //set default or loaded color
+            button.setTag(button_colors.get(id));
             button.getBackground().setColorFilter(button_colors.get(id), PorterDuff.Mode.SRC_IN);
         }
         send_configs();
     }
 
     //set all leds that correspond to the current Button
-    private void color_segment(int id){
-        ((MainActivity) getActivity()).send_config("setpixel " + id + " " + active_color + "\n");
+    private void color_segment(int id, int color){
+        String id_string = getResources().getResourceName(id);
+        id_string = id_string.split("/")[1];
+        int led_start=0;
+        int led_end;
+        double segmentsize = (double)NUM_LEDS / (double)num_buttons;
+        if(id_string.equals("buttonT")) {
+            led_start = 0;
+        } else if(id_string.contains("L")){
+            led_start = (int)Math.round((double)Integer.parseInt(id_string.substring(7)) * segmentsize);
+        }else if(id_string.contains("R")){
+            led_start = (int) Math.round(((num_buttons / 2.0)* segmentsize) + //left side buttons and top button
+                    Math.round(((num_buttons / 2.0))-(double)Integer.parseInt(id_string.substring(7))) * segmentsize);
+        }else if(id_string.equals("buttonB")){
+            led_start = (int)Math.round((num_buttons / 2.0)*segmentsize);
+        }else{
+            //should never happen
+            Log.d("CM", "ERROR: unknown id string: " + id_string);
+        }
+        led_end = (int)Math.round(led_start + segmentsize);
+        for(int i=led_start; i<led_end; i++) {
+            ((MainActivity) getActivity()).send_config("setpixel " + i + " " + color + "\n");
+        }
     }
 
     @Override
     public void send_configs() {
-        for (Map.Entry<Integer, Integer> entry : button_colors.entrySet()) {
-            int button_id = entry.getKey();
-            int color = entry.getValue();
-            ((MainActivity) getActivity()).send_config("setpixel " + button_id + " " + color + "\n");
+        for (int bid : button_ids) {
+            color_segment(bid, button_colors.get(bid));
         }
     }
 
@@ -162,6 +187,15 @@ public class CreativeMode extends PacemakerMode {
         if(config != null) {
             this.button_colors = config.getImap();
             this.active_color = config.getIval1();
+            for(int bid : button_ids){
+                //during development something broke and this repaired it
+                //this code snippet should not be needed, but better be safe than sorry
+                if(button_colors.get(bid) == null){
+                    String id_string = getResources().getResourceName(bid);
+                    Log.d("CM", "loading of color for " + id_string + " failed, replacing with default color");
+                    button_colors.put(bid, Color.rgb(204,65,36));
+                }
+            }
         }
     }
 }

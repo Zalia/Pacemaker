@@ -47,7 +47,6 @@ public class CustomRelativeLayout extends RelativeLayout {
                 float y = event.getRawY();
                 View foundView = findViewAt(this, Math.round(x), Math.round(y));
                 if (foundView instanceof Button && foundView != findViewById(R.id.color_picker_dialog_button)) {
-                    Log.d("CM", "found color circle");
                     ((Button) foundView).callOnClick();
                     return true;
                 }
