@@ -3,13 +3,9 @@ package zalia.pacemaker;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -20,15 +16,11 @@ import com.flask.colorpicker.OnColorSelectedListener;
 import com.flask.colorpicker.builder.ColorPickerClickListener;
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import static android.R.attr.button;
-import static android.R.attr.id;
-import static android.R.attr.key;
 import static zalia.pacemaker.MainActivity.CREATIVE;
 
 
@@ -38,7 +30,7 @@ import static zalia.pacemaker.MainActivity.CREATIVE;
 
 public class CreativeMode extends PacemakerMode {
 
-    private final int ID = CREATIVE;
+    protected final int ID = CREATIVE;
     private final int NUM_LEDS = 120;
 
     private int num_buttons;
@@ -65,23 +57,23 @@ public class CreativeMode extends PacemakerMode {
 
         //get a list of all buttons
         button_ids = new LinkedList<>();
-        RelativeLayout layout = (RelativeLayout)view.findViewById(R.id.creative_layout);
-        for(int index=0; index<layout.getChildCount(); index++){
+        RelativeLayout layout = (RelativeLayout) view.findViewById(R.id.creative_layout);
+        for (int index = 0; index < layout.getChildCount(); index++) {
             View child = layout.getChildAt(index);
             String id = view.getResources().getResourceName(child.getId());
-            if(id.startsWith("zalia.pacemaker:id/button")) {
+            if (id.startsWith("zalia.pacemaker:id/button")) {
                 button_ids.add(child.getId());
             }
         }
         num_buttons = button_ids.size();
 
         //default settings
-        active_color = Color.rgb(204,65,36);
+        active_color = Color.rgb(204, 65, 36);
         button_colors = new HashMap<>();
-        for(int bid : button_ids){
-            button_colors.put(bid, Color.rgb(204,65,36));
+        for (int bid : button_ids) {
+            button_colors.put(bid, Color.rgb(204, 65, 36));
         }
-        load_configs(((MainActivity)getActivity()).get_config(ID));
+        load_configs(((MainActivity) getActivity()).get_config(ID));
 
         //setup color picker dialog
         color_picker_dialog_button = (Button) view.findViewById(R.id.color_picker_dialog_button);
@@ -127,7 +119,7 @@ public class CreativeMode extends PacemakerMode {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(active_color != (int)v.getTag()) {
+                    if (active_color != (int) v.getTag()) {
                         button_colors.put(v.getId(), active_color);
 //                        v.getBackground().setColorFilter(active_color, PorterDuff.Mode.MULTIPLY);
                         color_segment(v.getId(), active_color);
@@ -144,29 +136,29 @@ public class CreativeMode extends PacemakerMode {
     }
 
     //set all leds that correspond to the current Button
-    private void color_segment(int id, int color){
+    private void color_segment(int id, int color) {
         String id_string = getResources().getResourceName(id);
         id_string = id_string.split("/")[1];
-        int led_start=0;
+        int led_start = 0;
         int led_end;
-        double segmentsize = (double)NUM_LEDS / (double)num_buttons;
-        if(id_string.equals("buttonT")) {
+        double segmentsize = (double) NUM_LEDS / (double) num_buttons;
+        if (id_string.equals("buttonT")) {
             led_start = 0;
-        } else if(id_string.contains("L")){
-            led_start = (int)Math.round((double)Integer.parseInt(id_string.substring(7)) * segmentsize);
-        }else if(id_string.contains("R")){
-            led_start = (int) Math.round(((num_buttons / 2.0)* segmentsize) + //left side buttons and top button
+        } else if (id_string.contains("L")) {
+            led_start = (int) Math.round((double) Integer.parseInt(id_string.substring(7)) * segmentsize);
+        } else if (id_string.contains("R")) {
+            led_start = (int) Math.round(((num_buttons / 2.0) * segmentsize) + //left side buttons and top button
                     //since my numbering pattern starts at the top, but the led strip wraps around the
                     //bottom and starts from there, the button id has to be inverted
-                    Math.round(((num_buttons / 2.0))-(double)Integer.parseInt(id_string.substring(7))) * segmentsize);
-        }else if(id_string.equals("buttonB")){
-            led_start = (int)Math.round((num_buttons / 2.0)*segmentsize);
-        }else{
+                    Math.round(((num_buttons / 2.0)) - (double) Integer.parseInt(id_string.substring(7))) * segmentsize);
+        } else if (id_string.equals("buttonB")) {
+            led_start = (int) Math.round((num_buttons / 2.0) * segmentsize);
+        } else {
             //should never happen
             Log.d("CM", "ERROR: unknown id string: " + id_string);
         }
-        led_end = (int)Math.round(led_start + segmentsize);
-        for(int i=led_start; i<led_end; i++) {
+        led_end = (int) Math.round(led_start + segmentsize);
+        for (int i = led_start; i < led_end; i++) {
             ((MainActivity) getActivity()).send_config("setpixel:" + i + " " + Color.red(color) +
                     " " + Color.green(color) + " " + Color.blue(color) + "\n");
         }
@@ -179,26 +171,30 @@ public class CreativeMode extends PacemakerMode {
         }
     }
 
-    protected PacemakerModeConfig store_configs(){
+    protected PacemakerModeConfig store_configs() {
         PacemakerModeConfig conf = new PacemakerModeConfig(ID);
         conf.setImap(button_colors);
         conf.setIval1(active_color);
         return conf;
     }
 
-    protected void load_configs(PacemakerModeConfig config){
-        if(config != null) {
+    protected void load_configs(PacemakerModeConfig config) {
+        if (config != null) {
             this.button_colors = config.getImap();
             this.active_color = config.getIval1();
-            for(int bid : button_ids){
+            for (int bid : button_ids) {
                 //during development something broke and this repaired it
                 //this code snippet should not be needed, but better be safe than sorry
-                if(button_colors.get(bid) == null){
+                if (button_colors.get(bid) == null) {
                     String id_string = getResources().getResourceName(bid);
                     Log.d("CM", "loading of color for " + id_string + " failed, replacing with default color");
-                    button_colors.put(bid, Color.rgb(204,65,36));
+                    button_colors.put(bid, Color.rgb(204, 65, 36));
                 }
             }
         }
+    }
+
+    protected int getID(){
+        return ID;
     }
 }

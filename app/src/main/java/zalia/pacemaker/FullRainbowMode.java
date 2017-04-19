@@ -21,7 +21,7 @@ import static zalia.pacemaker.MainActivity.RAINBOW;
 
 public class FullRainbowMode extends PacemakerMode {
 
-    private final int ID = RAINBOW;
+    protected final int ID = RAINBOW;
 
     private static final int MIN_SPEED = 1000;
     private static final int MAX_SPEED = 50;
@@ -45,15 +45,15 @@ public class FullRainbowMode extends PacemakerMode {
     private AppCompatCheckBox split_box;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
+    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.full_rainbow_layout, parent, false);
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState){
+    public void onViewCreated(View view, Bundle savedInstanceState) {
 
         //get configs if present
-        load_configs(((MainActivity)getActivity()).get_config(ID));
+        load_configs(((MainActivity) getActivity()).get_config(ID));
 
         //setup listeners
         speed_bar = (SeekBar) view.findViewById(R.id.rainbow_speed_slider);
@@ -76,7 +76,7 @@ public class FullRainbowMode extends PacemakerMode {
         });
 
         brightness_bar = (SeekBar) view.findViewById(R.id.rainbow_brightness_slider);
-        brightness_bar.setMax((int)Math.round((MAX_BRIGHTNESS - MIN_BRIGHTNESS) / BRIGHTNESS_STEP));
+        brightness_bar.setMax((int) Math.round((MAX_BRIGHTNESS - MIN_BRIGHTNESS) / BRIGHTNESS_STEP));
         brightness_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -122,9 +122,9 @@ public class FullRainbowMode extends PacemakerMode {
 
         //set current config
         speed_bar.setProgress((speed - MAX_SPEED) / SPEED_STEP);
-        brightness_bar.setProgress((int)Math.round((brightness - MIN_BRIGHTNESS) / BRIGHTNESS_STEP));
+        brightness_bar.setProgress((int) Math.round((brightness - MIN_BRIGHTNESS) / BRIGHTNESS_STEP));
         rainbow_bar.setProgress((rainbowness - MIN_RAINBOWNESS) / RAINBOWNESS_STEP);
-        if(split.equals("split:")){
+        if (split.equals("split:")) {
             split_box.setChecked(true);
             split_box.jumpDrawablesToCurrentState();
             Log.d("FCM", "setting split checked: " + split_box.isChecked());
@@ -133,12 +133,12 @@ public class FullRainbowMode extends PacemakerMode {
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
 
     }
 
-    private void change_background(){
+    private void change_background() {
         //draw gui elements white
         speed_bar.getProgressDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
         speed_bar.getThumb().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
@@ -149,11 +149,11 @@ public class FullRainbowMode extends PacemakerMode {
 
         split_box.setTextColor(Color.WHITE);
         ColorStateList colorStateList = new ColorStateList(
-                new int[][] {
-                        new int[] { -android.R.attr.state_checked }, // unchecked
-                        new int[] {  android.R.attr.state_checked }  // checked
+                new int[][]{
+                        new int[]{-android.R.attr.state_checked}, // unchecked
+                        new int[]{android.R.attr.state_checked}  // checked
                 },
-                new int[] {
+                new int[]{
                         Color.WHITE,
                         Color.WHITE
                 }
@@ -162,12 +162,12 @@ public class FullRainbowMode extends PacemakerMode {
 
         //draw background in rainbow colors
         GradientDrawable rainbow = new GradientDrawable(GradientDrawable.Orientation.TL_BR,
-                new int[] {Color.YELLOW, Color.RED, Color.MAGENTA, Color.BLUE, Color.CYAN, Color.GREEN, Color.YELLOW, Color.RED });
-        ((MainActivity)getActivity()).findViewById(R.id.pacemaker_layout).setBackground(rainbow);
+                new int[]{Color.YELLOW, Color.RED, Color.MAGENTA, Color.BLUE, Color.CYAN, Color.GREEN, Color.YELLOW, Color.RED});
+        ((MainActivity) getActivity()).findViewById(R.id.pacemaker_layout).setBackground(rainbow);
     }
 
     public void send_configs() {
-        ((MainActivity)getActivity()).send_config(split + "rainbow:" + speed + " " + rainbowness + " " + brightness + "\n");
+        ((MainActivity) getActivity()).send_config(split + "rainbow:" + speed + " " + rainbowness + " " + brightness + "\n");
     }
 
     protected PacemakerModeConfig store_configs() {
@@ -179,13 +179,17 @@ public class FullRainbowMode extends PacemakerMode {
         return conf;
     }
 
-    protected void load_configs(PacemakerModeConfig conf){
-        if(conf != null){
+    protected void load_configs(PacemakerModeConfig conf) {
+        if (conf != null) {
             this.brightness = conf.getDval1();
             this.rainbowness = conf.getIval1();
             this.speed = conf.getIval2();
             this.split = conf.getSval1();
         }
+    }
+
+    protected int getID(){
+        return ID;
     }
 
 }

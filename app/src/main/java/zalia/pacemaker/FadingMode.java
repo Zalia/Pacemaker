@@ -18,7 +18,7 @@ import static zalia.pacemaker.MainActivity.FADING;
 
 public class FadingMode extends ColorPickerMode {
 
-    private final int ID = FADING;
+    protected int ID = FADING;
 
     private static final int MIN_SPEED = 1000;
     private static final int MAX_SPEED = 50;
@@ -31,13 +31,13 @@ public class FadingMode extends ColorPickerMode {
     private String heartbeat;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
+    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         //default settings
         this.speed = 200;
         this.heartbeat = "fillcolour";
 //        current_color = Color.rgb(255, 255, 255);
         //load settings if present
-        load_configs(((MainActivity)getActivity()).get_config(ID));
+        load_configs(((MainActivity) getActivity()).get_config(ID));
         return inflater.inflate(R.layout.fading_layout, parent, false);
     }
 
@@ -70,11 +70,11 @@ public class FadingMode extends ColorPickerMode {
         heartbeat_box.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                heartbeat = ((AppCompatCheckBox)v).isChecked() ? "heartbeat" : "fillcolour";
+                heartbeat = ((AppCompatCheckBox) v).isChecked() ? "heartbeat" : "fillcolour";
                 send_configs();
             }
         });
-        if(heartbeat.equals("heartbeat")){
+        if (heartbeat.equals("heartbeat")) {
             heartbeat_box.setChecked(true);
             heartbeat_box.jumpDrawablesToCurrentState();
         }
@@ -100,11 +100,11 @@ public class FadingMode extends ColorPickerMode {
         //change colors of checkboxes
         heartbeat_box.setTextColor(ui_element_color);
         ColorStateList colorStateList = new ColorStateList(
-                new int[][] {
-                        new int[] { -android.R.attr.state_checked }, // unchecked
-                        new int[] {  android.R.attr.state_checked }  // checked
+                new int[][]{
+                        new int[]{-android.R.attr.state_checked}, // unchecked
+                        new int[]{android.R.attr.state_checked}  // checked
                 },
-                new int[] {
+                new int[]{
                         ui_element_color,
                         ui_element_color
                 }
@@ -114,12 +114,12 @@ public class FadingMode extends ColorPickerMode {
     }
 
     //currently does NOT include color and random state!
-    public void send_configs(){
+    public void send_configs() {
         ((MainActivity) getActivity()).send_config(heartbeat + ":" + speed + " " + this.getRGB() + "\n");
     }
 
     @Override
-    protected PacemakerModeConfig store_configs(){
+    protected PacemakerModeConfig store_configs() {
         PacemakerModeConfig conf = new PacemakerModeConfig(ID);
         conf.setIval1(current_color);
         conf.setIval2(speed);
@@ -128,12 +128,16 @@ public class FadingMode extends ColorPickerMode {
     }
 
     @Override
-    protected void load_configs(PacemakerModeConfig conf){
-        if(conf != null) {
+    protected void load_configs(PacemakerModeConfig conf) {
+        if (conf != null) {
             this.current_color = conf.getIval1();
             this.speed = conf.getIval2();
             this.heartbeat = conf.getSval1();
         }
     }
 
+    @Override
+    protected int getID(){
+        return ID;
+    }
 }

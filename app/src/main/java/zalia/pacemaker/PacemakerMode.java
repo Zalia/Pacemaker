@@ -13,7 +13,9 @@ public abstract class PacemakerMode extends Fragment {
     public abstract void send_configs();
 
     //store the current state of the mode into a PacemakerModeConfig object
-    //MANDATORY
     protected abstract PacemakerModeConfig store_configs();
+
+    //required to
+    protected abstract int getID();
 
 }

@@ -3,14 +3,11 @@ package zalia.pacemaker;
 import android.content.Context;
 import android.graphics.Rect;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
-
-import static android.R.attr.id;
 
 /**
  * Created by Zalia on 17.04.2017.
@@ -34,12 +31,12 @@ public class CustomRelativeLayout extends RelativeLayout {
         return find_and_call_colorbutton(event);
     }
 
-    public boolean onTouchEvent(MotionEvent event){
+    public boolean onTouchEvent(MotionEvent event) {
         find_and_call_colorbutton(event);
         return true;
     }
 
-    private boolean find_and_call_colorbutton(MotionEvent event){
+    private boolean find_and_call_colorbutton(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_MOVE:
             case MotionEvent.ACTION_DOWN:
@@ -56,7 +53,7 @@ public class CustomRelativeLayout extends RelativeLayout {
     }
 
     private View findViewAt(ViewGroup viewGroup, int x, int y) {
-        for(int i = 0; i < viewGroup.getChildCount(); i++) {
+        for (int i = 0; i < viewGroup.getChildCount(); i++) {
             View child = viewGroup.getChildAt(i);
             if (child instanceof ViewGroup) {
                 View foundView = findViewAt((ViewGroup) child, x, y);

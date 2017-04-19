@@ -19,7 +19,7 @@ import static zalia.pacemaker.MainActivity.RANDOM;
 
 public class RandomMeteorMode extends PacemakerMode {
 
-    private static final int ID = RANDOM;
+    protected static final int ID = RANDOM;
 
     private static final int MIN_INTENSITY = 1;
     private static final int MAX_INTENSITY = 43;
@@ -34,13 +34,13 @@ public class RandomMeteorMode extends PacemakerMode {
     private AppCompatCheckBox split_box;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
+    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.random_meteor_layout, parent, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        load_configs(((MainActivity)getActivity()).get_config(ID));
+        load_configs(((MainActivity) getActivity()).get_config(ID));
 
         intensity_bar = (SeekBar) view.findViewById(R.id.intensity_slider);
         intensity_bar.setMax((MAX_INTENSITY - MIN_INTENSITY) / INTENSITY_STEP);
@@ -65,14 +65,14 @@ public class RandomMeteorMode extends PacemakerMode {
         split_box.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                split = ((AppCompatCheckBox)v).isChecked() ? "split:" : "";
+                split = ((AppCompatCheckBox) v).isChecked() ? "split:" : "";
                 send_configs();
             }
         });
 
         //set current config
         intensity_bar.setProgress((intensity - MIN_INTENSITY) / INTENSITY_STEP);
-        if(split.equals("split:")){
+        if (split.equals("split:")) {
             split_box.setChecked(true);
             split_box.jumpDrawablesToCurrentState();
         }
@@ -80,11 +80,11 @@ public class RandomMeteorMode extends PacemakerMode {
         change_background();
     }
 
-    private void change_background(){
+    private void change_background() {
         //change background to a different rainbow pattern
         GradientDrawable rainbow = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
-                new int[] {Color.YELLOW, Color.RED, Color.MAGENTA, Color.BLUE, Color.CYAN, Color.GREEN });
-        ((MainActivity)getActivity()).findViewById(R.id.pacemaker_layout).setBackground(rainbow);
+                new int[]{Color.YELLOW, Color.RED, Color.MAGENTA, Color.BLUE, Color.CYAN, Color.GREEN});
+        ((MainActivity) getActivity()).findViewById(R.id.pacemaker_layout).setBackground(rainbow);
 
         //change colors of progressbar
         intensity_bar.getProgressDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
@@ -92,11 +92,11 @@ public class RandomMeteorMode extends PacemakerMode {
 
         //change colors of checkboxes
         ColorStateList colorStateList = new ColorStateList(
-                new int[][] {
-                        new int[] { -android.R.attr.state_checked }, // unchecked
-                        new int[] {  android.R.attr.state_checked }  // checked
+                new int[][]{
+                        new int[]{-android.R.attr.state_checked}, // unchecked
+                        new int[]{android.R.attr.state_checked}  // checked
                 },
-                new int[] {
+                new int[]{
                         Color.WHITE,
                         Color.WHITE
                 }
@@ -107,20 +107,24 @@ public class RandomMeteorMode extends PacemakerMode {
 
     @Override
     public void send_configs() {
-        ((MainActivity)getActivity()).send_config(split + "comethail:" + intensity + "\n");
+        ((MainActivity) getActivity()).send_config(split + "comethail:" + intensity + "\n");
     }
 
-    protected PacemakerModeConfig store_configs(){
+    protected PacemakerModeConfig store_configs() {
         PacemakerModeConfig conf = new PacemakerModeConfig(ID);
         conf.setIval1(intensity);
         conf.setSval1(split);
         return conf;
     }
 
-    protected void load_configs(PacemakerModeConfig conf){
-        if(conf != null){
+    protected void load_configs(PacemakerModeConfig conf) {
+        if (conf != null) {
             this.intensity = conf.getIval1();
             this.split = conf.getSval1();
         }
+    }
+
+    protected int getID(){
+        return ID;
     }
 }

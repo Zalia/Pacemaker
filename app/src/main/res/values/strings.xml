@@ -10,7 +10,7 @@
         <item>"  Regenbogen"</item>
         <item>"  Meteor"</item>
         <item>"  Sternenschauer</item>
-        <item>"  Creative Mode"</item>
-        <!--<item>"  Test Mode"</item>-->
+        <item>"  Kreativmodus"</item>
+        <!--<item>"  Testmodus"</item>-->
     </string-array>
 </resources>

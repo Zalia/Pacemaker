@@ -1,16 +1,13 @@
 package zalia.pacemaker;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Map;
-
-import static android.R.attr.id;
 
 /**
  * Created by Zalia on 28.03.2017.
  */
 
-public class PacemakerModeConfig implements Serializable{
+public class PacemakerModeConfig implements Serializable {
 
     private int id;
     private int ival1;
@@ -20,7 +17,7 @@ public class PacemakerModeConfig implements Serializable{
     private String sval1;
     private Map<Integer, Integer> imap;
 
-    public PacemakerModeConfig(int id){
+    public PacemakerModeConfig(int id) {
         this.id = id;
     }
 
@@ -72,8 +69,12 @@ public class PacemakerModeConfig implements Serializable{
         this.sval1 = sval1;
     }
 
-    public Map<Integer, Integer> getImap(){ return imap; }
+    public Map<Integer, Integer> getImap() {
+        return imap;
+    }
 
-    public void setImap(Map<Integer, Integer> imap){ this.imap = imap; }
+    public void setImap(Map<Integer, Integer> imap) {
+        this.imap = imap;
+    }
 
 }

@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import static android.os.Build.VERSION_CODES.M;
 import static zalia.pacemaker.MainActivity.METEOR;
 
 /**
@@ -19,7 +18,7 @@ import static zalia.pacemaker.MainActivity.METEOR;
 
 public class MeteorMode extends ColorPickerMode {
 
-    private final int ID = METEOR;
+    protected final int ID = METEOR;
 
     private static final int MIN_SPEED = 1010;
     private static final int MAX_SPEED = 10;
@@ -37,19 +36,19 @@ public class MeteorMode extends ColorPickerMode {
     private String split;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
+    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         //default settings
         speed = 400;
         length = 40;
         split = "split:";
 //        current_color = Color.rgb(255, 255, 255);
         //load configs if present
-        load_configs(((MainActivity)getActivity()).get_config(ID));
+        load_configs(((MainActivity) getActivity()).get_config(ID));
         return inflater.inflate(R.layout.meteor_layout, parent, false);
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState){
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         //register speed seekbar
@@ -97,11 +96,11 @@ public class MeteorMode extends ColorPickerMode {
         split_box.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                split = ((AppCompatCheckBox)v).isChecked() ? "split:" : "";
+                split = ((AppCompatCheckBox) v).isChecked() ? "split:" : "";
                 send_configs();
             }
         });
-        if(split.equals("split:")){
+        if (split.equals("split:")) {
             split_box.setChecked(true);
             split_box.jumpDrawablesToCurrentState();
         }
@@ -114,7 +113,7 @@ public class MeteorMode extends ColorPickerMode {
         super.change_background(color);
 
         //change color of ui elements if background is too dark/light
-        int ui_element_color = ((MainActivity)getActivity()).find_viable_ui_color(color);
+        int ui_element_color = ((MainActivity) getActivity()).find_viable_ui_color(color);
 
         //change colors of progressbar texts
         TextView speed_text = (TextView) this.getView().findViewById(R.id.meteor_speed_text);
@@ -130,11 +129,11 @@ public class MeteorMode extends ColorPickerMode {
 
         //change colors of checkboxes
         ColorStateList colorStateList = new ColorStateList(
-                new int[][] {
-                        new int[] { -android.R.attr.state_checked }, // unchecked
-                        new int[] {  android.R.attr.state_checked }  // checked
+                new int[][]{
+                        new int[]{-android.R.attr.state_checked}, // unchecked
+                        new int[]{android.R.attr.state_checked}  // checked
                 },
-                new int[] {
+                new int[]{
                         ui_element_color,
                         ui_element_color
                 }
@@ -144,12 +143,12 @@ public class MeteorMode extends ColorPickerMode {
     }
 
     //currently does NOT include color and random state!
-    public void send_configs(){
-        ((MainActivity)getActivity()).send_config(split + "meteor:" + speed + " " + length + " " + getRGB() + "\n");
+    public void send_configs() {
+        ((MainActivity) getActivity()).send_config(split + "meteor:" + speed + " " + length + " " + getRGB() + "\n");
     }
 
     @Override
-    protected PacemakerModeConfig store_configs(){
+    protected PacemakerModeConfig store_configs() {
         PacemakerModeConfig conf = new PacemakerModeConfig(ID);
         conf.setIval1(current_color);
         conf.setIval2(speed);
@@ -160,12 +159,17 @@ public class MeteorMode extends ColorPickerMode {
     }
 
     @Override
-    protected void load_configs(PacemakerModeConfig conf){
-        if(conf != null) {
+    protected void load_configs(PacemakerModeConfig conf) {
+        if (conf != null) {
             this.current_color = conf.getIval1();
             this.speed = conf.getIval2();
             this.length = conf.getIval3();
             this.split = conf.getSval1();
         }
+    }
+
+    @Override
+    protected int getID(){
+        return ID;
     }
 }

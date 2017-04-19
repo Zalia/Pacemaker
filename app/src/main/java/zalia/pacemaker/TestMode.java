@@ -17,87 +17,102 @@ import static zalia.pacemaker.MainActivity.TEST;
 
 public class TestMode extends PacemakerMode {
 
-    private final int ID = TEST;
+    protected final int ID = TEST;
 
-    private View root;
-    private RadioGroup radio_group;
-    private String active_color, mirror;
-    private boolean initialized = false;
+    private int active_color;
+    private String split;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
+    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.test_layout, parent, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        if(!initialized) {
-            //default settings
-            active_color = "r";
-            mirror = "";
+        //default settings
+        active_color = Color.RED;
+        split = "";
 
-            change_background(active_color);
+        //if possible, load settings
+        load_configs(((MainActivity) getActivity()).get_config(ID));
 
-            //setup listeners
-            radio_group = (RadioGroup) view.findViewById(R.id.effect_color);
-            radio_group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(RadioGroup group, int checkedId) {
-                    switch (checkedId) {
-                        case R.id.button_red:
-                        default:
-                            active_color = "r";
-                            break;
-                        case R.id.button_green:
-                            active_color = "g";
-                            break;
-                        case R.id.button_blue:
-                            active_color = "b";
-                            break;
-                    }
-                    change_background(active_color);
-                    send_configs();
+        //initialize GUI elements and setup listeners
+        RadioGroup radio_group = (RadioGroup) view.findViewById(R.id.effect_color);
+        radio_group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId) {
+                    case R.id.button_red:
+                    default:
+                        active_color = Color.RED;
+                        break;
+                    case R.id.button_green:
+                        active_color = Color.GREEN;
+                        break;
+                    case R.id.button_blue:
+                        active_color = Color.BLUE;
+                        break;
                 }
-            });
+                change_background(active_color);
+                send_configs();
+            }
+        });
 
-            CheckBox mirror_box = (CheckBox) view.findViewById(R.id.mirror_button);
-            mirror_box.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    mirror = isChecked ? "split:" : "";
-                    send_configs();
-                }
-            });
-            initialized = true;
-        } else{
-            change_background(active_color);
+        CheckBox mirror_box = (CheckBox) view.findViewById(R.id.mirror_button);
+        mirror_box.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                split = isChecked ? "split:" : "";
+                send_configs();
+            }
+        });
+
+        //restore default/loaded configs
+        switch (active_color) {
+            case Color.RED:
+                radio_group.check(R.id.button_red);
+                break;
+            case Color.GREEN:
+                radio_group.check(R.id.button_green);
+                break;
+            case Color.BLUE:
+                radio_group.check(R.id.button_blue);
+                break;
         }
+        radio_group.jumpDrawablesToCurrentState(); //skip animations
+        if (split.equals("split:")) {
+            mirror_box.setChecked(true);
+            mirror_box.jumpDrawablesToCurrentState(); //very important for buttons to not bug out
+        }
+        change_background(active_color);
     }
 
-    private void change_background(String color){
-        int c = Color.RED;
-        switch(color){
-            case "r":
-                c = Color.RED;
-                break;
-            case "g":
-                c = Color.GREEN;
-                break;
-            case "b":
-                c = Color.BLUE;
-                break;
-        }
-        ((MainActivity)getActivity()).findViewById(R.id.pacemaker_layout).setBackgroundColor(c);
+    private void change_background(int color) {
+        getActivity().findViewById(R.id.pacemaker_layout).setBackgroundColor(color);
     }
 
     @Override
     public void send_configs() {
-        ((MainActivity)getActivity()).send_config(mirror + "fillcolour:" + active_color + "\n");
+        ((MainActivity) getActivity()).send_config(split + "fillcolour:" + Color.red(active_color) +
+                " " + Color.green(active_color) + " " + Color.blue(active_color) + "\n");
     }
 
-    protected PacemakerModeConfig store_configs(){
+    protected PacemakerModeConfig store_configs() {
         PacemakerModeConfig conf = new PacemakerModeConfig(ID);
+        conf.setIval1(active_color);
+        conf.setSval1(split);
         return conf;
+    }
+
+    private void load_configs(PacemakerModeConfig config) {
+        if (config != null) {
+            this.active_color = config.getIval1();
+            this.split = config.getSval1();
+        }
+    }
+
+    protected int getID(){
+        return ID;
     }
 
 }

@@ -12,7 +12,7 @@ import com.flask.colorpicker.slider.LightnessSlider;
 
 public class CustomLightnessSlider extends LightnessSlider {
 
-    public CustomLightnessSlider(Context context){
+    public CustomLightnessSlider(Context context) {
         super(context);
     }
 
@@ -21,8 +21,8 @@ public class CustomLightnessSlider extends LightnessSlider {
     }
 
     @Override
-    public boolean dispatchTouchEvent(MotionEvent event){
-        if(getParent() != null && event.getAction() == MotionEvent.ACTION_DOWN){
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        if (getParent() != null && event.getAction() == MotionEvent.ACTION_DOWN) {
             getParent().requestDisallowInterceptTouchEvent(true);
         }
         return super.dispatchTouchEvent(event);

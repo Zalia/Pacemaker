@@ -15,13 +15,13 @@ public class CustomColorPickerView extends ColorPickerView {
         super(context);
     }
 
-    public CustomColorPickerView(Context context, AttributeSet attrs){
+    public CustomColorPickerView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
     @Override
-    public boolean dispatchTouchEvent(MotionEvent event){
-        if(getParent() != null && event.getAction() == MotionEvent.ACTION_DOWN){
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        if (getParent() != null && event.getAction() == MotionEvent.ACTION_DOWN) {
             getParent().requestDisallowInterceptTouchEvent(true);
         }
         return super.dispatchTouchEvent(event);
