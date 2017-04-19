@@ -14,8 +14,6 @@ import android.widget.CompoundButton;
 import android.widget.SeekBar;
 
 import static zalia.pacemaker.MainActivity.RAINBOW;
-import static zalia.pacemaker.MainActivity.get_progress_respecting_range;
-import static zalia.pacemaker.MainActivity.normalize_progress;
 
 /**
  * Created by Zalia on 17.02.2017.
@@ -27,10 +25,13 @@ public class FullRainbowMode extends PacemakerMode {
 
     private static final int MIN_SPEED = 1000;
     private static final int MAX_SPEED = 50;
+    private static final int SPEED_STEP = 50;
     private static final int MIN_BRIGHTNESS = 0;
     private static final int MAX_BRIGHTNESS = 1;
+    private static final double BRIGHTNESS_STEP = 0.05;
     private static final int MIN_RAINBOWNESS = 0;
     private static final int MAX_RAINBOWNESS = 5;
+    private static final int RAINBOWNESS_STEP = 1;
 
     //default settings
     private int speed = 400;
@@ -56,10 +57,12 @@ public class FullRainbowMode extends PacemakerMode {
 
         //setup listeners
         speed_bar = (SeekBar) view.findViewById(R.id.rainbow_speed_slider);
+        //max and min are the other way round here due to max being the smaller number
+        speed_bar.setMax((MIN_SPEED - MAX_SPEED) / SPEED_STEP);
         speed_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                speed = (int) Math.round(normalize_progress(progress, MIN_SPEED, MAX_SPEED));
+                speed = MAX_SPEED + progress * SPEED_STEP;
                 send_configs();
             }
 
@@ -73,10 +76,11 @@ public class FullRainbowMode extends PacemakerMode {
         });
 
         brightness_bar = (SeekBar) view.findViewById(R.id.rainbow_brightness_slider);
+        brightness_bar.setMax((int)Math.round((MAX_BRIGHTNESS - MIN_BRIGHTNESS) / BRIGHTNESS_STEP));
         brightness_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                brightness = normalize_progress(progress, MIN_BRIGHTNESS, MAX_BRIGHTNESS);
+                brightness = MIN_BRIGHTNESS + progress * BRIGHTNESS_STEP;
                 send_configs();
             }
 
@@ -90,10 +94,11 @@ public class FullRainbowMode extends PacemakerMode {
         });
 
         rainbow_bar = (SeekBar) view.findViewById(R.id.rainbow_slider);
+        rainbow_bar.setMax((MAX_RAINBOWNESS - MIN_RAINBOWNESS) / RAINBOWNESS_STEP);
         rainbow_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                rainbowness = (int) Math.round(MainActivity.normalize_progress(progress, MIN_RAINBOWNESS, MAX_RAINBOWNESS));
+                rainbowness = MIN_RAINBOWNESS + progress * RAINBOWNESS_STEP;
                 send_configs();
             }
 
@@ -116,9 +121,9 @@ public class FullRainbowMode extends PacemakerMode {
         });
 
         //set current config
-        speed_bar.setProgress(get_progress_respecting_range(speed, MIN_SPEED, MAX_SPEED));
-        brightness_bar.setProgress(get_progress_respecting_range(brightness, MIN_BRIGHTNESS, MAX_BRIGHTNESS));
-        rainbow_bar.setProgress(get_progress_respecting_range(rainbowness, MIN_RAINBOWNESS, MAX_RAINBOWNESS));
+        speed_bar.setProgress((speed - MAX_SPEED) / SPEED_STEP);
+        brightness_bar.setProgress((int)Math.round((brightness - MIN_BRIGHTNESS) / BRIGHTNESS_STEP));
+        rainbow_bar.setProgress((rainbowness - MIN_RAINBOWNESS) / RAINBOWNESS_STEP);
         if(split.equals("split:")){
             split_box.setChecked(true);
             split_box.jumpDrawablesToCurrentState();

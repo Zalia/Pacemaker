@@ -10,9 +10,8 @@ import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import static android.os.Build.VERSION_CODES.M;
 import static zalia.pacemaker.MainActivity.METEOR;
-import static zalia.pacemaker.MainActivity.get_progress_respecting_range;
-import static zalia.pacemaker.MainActivity.normalize_progress;
 
 /**
  * Created by Zalia on 18.03.2017.
@@ -22,10 +21,12 @@ public class MeteorMode extends ColorPickerMode {
 
     private final int ID = METEOR;
 
-    private static final int MIN_SPEED = 1000;
+    private static final int MIN_SPEED = 1010;
     private static final int MAX_SPEED = 10;
+    private static final int SPEED_STEP = 50;
     private static final int MIN_LENGTH = 5;
     private static final int MAX_LENGTH = 100;
+    private static final int LENGTH_STEP = 5;
 
     private SeekBar speed_bar;
     private SeekBar length_bar;
@@ -53,10 +54,11 @@ public class MeteorMode extends ColorPickerMode {
 
         //register speed seekbar
         speed_bar = (SeekBar) view.findViewById(R.id.meteor_speed_slider);
+        speed_bar.setMax((MIN_SPEED - MAX_SPEED) / SPEED_STEP);
         speed_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                speed = (int) Math.round(normalize_progress(progress, MIN_SPEED, MAX_SPEED));
+                speed = MAX_SPEED + progress * SPEED_STEP;
                 send_configs();
             }
 
@@ -68,14 +70,15 @@ public class MeteorMode extends ColorPickerMode {
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
         });
-        speed_bar.setProgress(get_progress_respecting_range(speed, MIN_SPEED, MAX_SPEED));
+        speed_bar.setProgress((speed - MAX_SPEED) / SPEED_STEP);
 
         //register length seekbar
         length_bar = (SeekBar) view.findViewById(R.id.meteor_length_slider);
+        length_bar.setMax((MAX_LENGTH - MIN_LENGTH) / LENGTH_STEP);
         length_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                length = (int) Math.round(normalize_progress(progress, MIN_LENGTH, MAX_LENGTH));
+                length = MIN_LENGTH + progress * LENGTH_STEP;
                 send_configs();
             }
 
@@ -87,7 +90,7 @@ public class MeteorMode extends ColorPickerMode {
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
         });
-        length_bar.setProgress(get_progress_respecting_range(length, MIN_LENGTH, MAX_LENGTH));
+        length_bar.setProgress((length - MIN_LENGTH) / LENGTH_STEP);
 
         //register split checkbox
         split_box = (AppCompatCheckBox) view.findViewById(R.id.split_checkbox);

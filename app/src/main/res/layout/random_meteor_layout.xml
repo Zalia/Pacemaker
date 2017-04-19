@@ -24,7 +24,8 @@
         <SeekBar
             android:id="@+id/intensity_slider"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:theme="@style/DiscreteSeekBarWithoutSteps" />
 
         <android.support.v7.widget.AppCompatCheckBox
             android:id="@+id/split_checkbox"

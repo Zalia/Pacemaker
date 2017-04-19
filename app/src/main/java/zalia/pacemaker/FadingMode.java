@@ -10,10 +10,7 @@ import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import static android.R.attr.mode;
 import static zalia.pacemaker.MainActivity.FADING;
-import static zalia.pacemaker.MainActivity.get_progress_respecting_range;
-import static zalia.pacemaker.MainActivity.normalize_progress;
 
 /**
  * Created by Zalia on 25.03.2017.
@@ -25,6 +22,7 @@ public class FadingMode extends ColorPickerMode {
 
     private static final int MIN_SPEED = 1000;
     private static final int MAX_SPEED = 50;
+    private static final int SPEED_STEP = 50;
 
     private SeekBar speed_bar;
     private AppCompatCheckBox heartbeat_box;
@@ -49,10 +47,11 @@ public class FadingMode extends ColorPickerMode {
 
         //register speed seekbar
         speed_bar = (SeekBar) view.findViewById(R.id.fading_speed_slider);
+        speed_bar.setMax((MIN_SPEED - MAX_SPEED) / SPEED_STEP);
         speed_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                speed = (int) Math.round(normalize_progress(progress, MIN_SPEED, MAX_SPEED));
+                speed = MAX_SPEED + progress * SPEED_STEP;
                 send_configs();
             }
 
@@ -64,7 +63,7 @@ public class FadingMode extends ColorPickerMode {
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
         });
-        speed_bar.setProgress(get_progress_respecting_range(speed, MIN_SPEED, MAX_SPEED));
+        speed_bar.setProgress((speed - MAX_SPEED) / SPEED_STEP);
 
         //register heartbeat checkbox
         heartbeat_box = (AppCompatCheckBox) view.findViewById(R.id.heartbeat_checkbox);

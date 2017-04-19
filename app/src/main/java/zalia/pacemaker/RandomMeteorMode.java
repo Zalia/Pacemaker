@@ -12,8 +12,6 @@ import android.view.ViewGroup;
 import android.widget.SeekBar;
 
 import static zalia.pacemaker.MainActivity.RANDOM;
-import static zalia.pacemaker.MainActivity.get_progress_respecting_range;
-import static zalia.pacemaker.MainActivity.normalize_progress;
 
 /**
  * Created by Zalia on 27.03.2017.
@@ -24,7 +22,8 @@ public class RandomMeteorMode extends PacemakerMode {
     private static final int ID = RANDOM;
 
     private static final int MIN_INTENSITY = 1;
-    private static final int MAX_INTENSITY = 42;
+    private static final int MAX_INTENSITY = 43;
+    private static final int INTENSITY_STEP = 2;
 
     //default config
     private int intensity = 4;
@@ -44,10 +43,11 @@ public class RandomMeteorMode extends PacemakerMode {
         load_configs(((MainActivity)getActivity()).get_config(ID));
 
         intensity_bar = (SeekBar) view.findViewById(R.id.intensity_slider);
+        intensity_bar.setMax((MAX_INTENSITY - MIN_INTENSITY) / INTENSITY_STEP);
         intensity_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                intensity = (int)normalize_progress(progress, MIN_INTENSITY, MAX_INTENSITY);
+                intensity = MIN_INTENSITY + progress * INTENSITY_STEP;
                 send_configs();
             }
 
@@ -71,7 +71,7 @@ public class RandomMeteorMode extends PacemakerMode {
         });
 
         //set current config
-        intensity_bar.setProgress(get_progress_respecting_range(intensity, MIN_INTENSITY, MAX_INTENSITY));
+        intensity_bar.setProgress((intensity - MIN_INTENSITY) / INTENSITY_STEP);
         if(split.equals("split:")){
             split_box.setChecked(true);
             split_box.jumpDrawablesToCurrentState();

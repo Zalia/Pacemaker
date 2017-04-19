@@ -24,7 +24,8 @@
         <SeekBar
             android:id="@+id/rainbow_speed_slider"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:theme="@style/DiscreteSeekBarWithoutSteps" />
 
         <TextView
             android:layout_width="match_parent"
@@ -36,7 +37,8 @@
         <SeekBar
             android:id="@+id/rainbow_brightness_slider"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:theme="@style/DiscreteSeekBarWithoutSteps" />
 
         <TextView
             android:layout_width="match_parent"
@@ -48,7 +50,8 @@
         <SeekBar
             android:id="@+id/rainbow_slider"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:theme="@style/DiscreteSeekBarWithoutSteps" />
 
         <android.support.v7.widget.AppCompatCheckBox
             android:id="@+id/mirror_button"

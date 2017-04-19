@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -613,13 +614,16 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
 
-    //utility method for all fragments that use progress bars
-    protected static double normalize_progress(int progress, int min, int max) {
-        return (double) min + ((double) max - (double) min) / (100 / (double) progress);
-    }
+//since all seekbars were discretized to lower the bluetooth spam for the controller
+//these are not needed anymore and each progressbar has to be managed individually
+//    //utility method for all fragments that use progress bars
+//    protected static double normalize_progress(int progress, int min, int max) {
+//        return (double) min + ((double) max - (double) min) / (100 / (double) progress);
+//    }
+//
+//    //utility function, returns seekbar progress of value within the given range
+//    protected static int get_progress_respecting_range(double value, int min, int max) {
+//        return (int) Math.round(100 * ((value - min) / ((double) max - (double) min)));
+//    }
 
-    //utility function, returns seekbar progress of value within the given range
-    protected static int get_progress_respecting_range(double value, int min, int max) {
-        return (int) Math.round(100 * ((value - min) / ((double) max - (double) min)));
-    }
 }
