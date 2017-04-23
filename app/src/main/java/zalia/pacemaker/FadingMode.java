@@ -51,7 +51,7 @@ public class FadingMode extends ColorPickerMode {
         speed_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                speed = MAX_SPEED + progress * SPEED_STEP;
+                speed = MIN_SPEED - progress * SPEED_STEP;
                 send_configs();
             }
 
@@ -63,7 +63,7 @@ public class FadingMode extends ColorPickerMode {
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
         });
-        speed_bar.setProgress((speed - MAX_SPEED) / SPEED_STEP);
+        speed_bar.setProgress((MIN_SPEED - speed) / SPEED_STEP);
 
         //register heartbeat checkbox
         heartbeat_box = (AppCompatCheckBox) view.findViewById(R.id.heartbeat_checkbox);

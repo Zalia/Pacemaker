@@ -62,7 +62,7 @@ public class FullRainbowMode extends PacemakerMode {
         speed_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                speed = MAX_SPEED + progress * SPEED_STEP;
+                speed = MIN_SPEED - progress * SPEED_STEP;
                 send_configs();
             }
 
@@ -121,7 +121,7 @@ public class FullRainbowMode extends PacemakerMode {
         });
 
         //set current config
-        speed_bar.setProgress((speed - MAX_SPEED) / SPEED_STEP);
+        speed_bar.setProgress((MIN_SPEED - speed) / SPEED_STEP);
         brightness_bar.setProgress((int) Math.round((brightness - MIN_BRIGHTNESS) / BRIGHTNESS_STEP));
         rainbow_bar.setProgress((rainbowness - MIN_RAINBOWNESS) / RAINBOWNESS_STEP);
         if (split.equals("split:")) {
