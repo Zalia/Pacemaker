@@ -152,15 +152,19 @@ public class CreativeMode extends PacemakerMode {
         } else if (id_string.contains("L")) {
             led_start = (int) Math.round((double) Integer.parseInt(id_string.substring(7)) * segmentsize);
             start_next_segment = (int) Math.round((double) (Integer.parseInt(id_string.substring(7)) + 1) * segmentsize);
+            if(start_next_segment == (int) Math.round((num_buttons / 2.0) * segmentsize))
+                start_next_segment -= 1;
         } else if (id_string.contains("R")) {
             led_start = (int) Math.round(((num_buttons / 2.0) * segmentsize) + //left side buttons and top button
                     //since my numbering pattern starts at the top, but the led strip wraps around the
                     //bottom and starts from there, the button id has to be inverted
                     Math.round(((num_buttons / 2.0)) - (double) Integer.parseInt(id_string.substring(7))) * segmentsize);
             start_next_segment = (int) Math.round(((num_buttons / 2.0) * segmentsize) + Math.round(((num_buttons / 2.0)) - (double) (Integer.parseInt(id_string.substring(7)) - 1)) * segmentsize);
+            if(led_start == (int) Math.ceil(NUM_LEDS / 2.0) + 2)
+                led_start -= 1;
         } else if (id_string.equals("buttonB")) {
-            led_start = (int) Math.round((num_buttons / 2.0) * segmentsize);
-            start_next_segment = (int)Math.ceil(NUM_LEDS / 2.0) + 1;
+            led_start = (int) Math.round((num_buttons / 2.0) * segmentsize) - 1; //45
+            start_next_segment = (int) Math.ceil(NUM_LEDS / 2.0) + 1; //47
         } else {
             //should never happen
             Log.d("CM", "ERROR: unknown id string: " + id_string);
@@ -168,8 +172,8 @@ public class CreativeMode extends PacemakerMode {
         led_end = (int) (Math.round(led_start + segmentsize));
         Log.d("CM", ""+led_end);
         if(led_end != start_next_segment){
-            led_end += 1;
             Log.d("CM", "end: " + led_end + " / start next segment: " + start_next_segment);
+            led_end += 1;
         }
         for (int i = led_start; i < led_end; i++) {
 

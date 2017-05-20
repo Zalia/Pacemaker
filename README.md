@@ -14,4 +14,3 @@ The following files not directly associated with the app itself can be found in 
 * A pdn Paint.NET file and a corresponding png with the current 2D design
 * A pdn Paint.NET file of the launcher icon
 * A variation of the launcher icon (originally intended as profile picture for the Telegram HeartbeatBot)
-* A printable pdf of the inner heartshape. The inner line of the lineout corresponds to the inner line in the original design. To retain scale, the pdf is made to be printed with a margin of 4.23mm (to be set in printing options).
