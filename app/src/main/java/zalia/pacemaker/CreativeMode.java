@@ -31,7 +31,7 @@ import static zalia.pacemaker.MainActivity.CREATIVE;
 public class CreativeMode extends PacemakerMode {
 
     protected final int ID = CREATIVE;
-    private final int NUM_LEDS = 120;
+    private final int NUM_LEDS = 90;
 
     private int num_buttons;
     int active_color;
@@ -136,31 +136,48 @@ public class CreativeMode extends PacemakerMode {
     }
 
     //set all leds that correspond to the current Button
+    //this implementation is maximized for chaos and should either
+    //a) never be touched or
+    //b) rewritten completely
     private void color_segment(int id, int color) {
         String id_string = getResources().getResourceName(id);
         id_string = id_string.split("/")[1];
         int led_start = 0;
         int led_end;
+        int start_next_segment = 0;
         double segmentsize = (double) NUM_LEDS / (double) num_buttons;
         if (id_string.equals("buttonT")) {
             led_start = 0;
+            start_next_segment = (int) Math.round(1.0 * segmentsize);
         } else if (id_string.contains("L")) {
             led_start = (int) Math.round((double) Integer.parseInt(id_string.substring(7)) * segmentsize);
+            start_next_segment = (int) Math.round((double) (Integer.parseInt(id_string.substring(7)) + 1) * segmentsize);
         } else if (id_string.contains("R")) {
             led_start = (int) Math.round(((num_buttons / 2.0) * segmentsize) + //left side buttons and top button
                     //since my numbering pattern starts at the top, but the led strip wraps around the
                     //bottom and starts from there, the button id has to be inverted
                     Math.round(((num_buttons / 2.0)) - (double) Integer.parseInt(id_string.substring(7))) * segmentsize);
+            start_next_segment = (int) Math.round(((num_buttons / 2.0) * segmentsize) + Math.round(((num_buttons / 2.0)) - (double) (Integer.parseInt(id_string.substring(7)) - 1)) * segmentsize);
         } else if (id_string.equals("buttonB")) {
             led_start = (int) Math.round((num_buttons / 2.0) * segmentsize);
+            start_next_segment = 47;
         } else {
             //should never happen
             Log.d("CM", "ERROR: unknown id string: " + id_string);
         }
         led_end = (int) Math.round(led_start + segmentsize);
-        for (int i = led_start; i < led_end; i++) {
+        if(led_end != start_next_segment){
+            led_end += 1;
+            Log.d("CM", "end: " + led_end + " / start next segment: " + start_next_segment);
+        }
+        // shift ids by 1 as required by hardware
+        for (int i = led_start+1; i <= led_end; i++) {
+            if(i==90)
+                i=0;
             ((MainActivity) getActivity()).send_config("setpixel:" + i + " " + Color.red(color) +
                     " " + Color.green(color) + " " + Color.blue(color) + "\n");
+            if (i==0)
+                break;
         }
     }
 
