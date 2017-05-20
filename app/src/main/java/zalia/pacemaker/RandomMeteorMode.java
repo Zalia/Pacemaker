@@ -22,8 +22,8 @@ public class RandomMeteorMode extends PacemakerMode {
     protected static final int ID = RANDOM;
 
     private static final int MIN_INTENSITY = 1;
-    private static final int MAX_INTENSITY = 43;
-    private static final int INTENSITY_STEP = 2;
+    private static final int MAX_INTENSITY = 21;
+    private static final int INTENSITY_STEP = 1;
 
     //default config
     private int intensity = 4;

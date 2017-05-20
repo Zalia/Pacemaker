@@ -31,7 +31,7 @@ import static zalia.pacemaker.MainActivity.CREATIVE;
 public class CreativeMode extends PacemakerMode {
 
     protected final int ID = CREATIVE;
-    private final int NUM_LEDS = 90;
+    private final int NUM_LEDS = 91;
 
     private int num_buttons;
     int active_color;
@@ -160,24 +160,21 @@ public class CreativeMode extends PacemakerMode {
             start_next_segment = (int) Math.round(((num_buttons / 2.0) * segmentsize) + Math.round(((num_buttons / 2.0)) - (double) (Integer.parseInt(id_string.substring(7)) - 1)) * segmentsize);
         } else if (id_string.equals("buttonB")) {
             led_start = (int) Math.round((num_buttons / 2.0) * segmentsize);
-            start_next_segment = 47;
+            start_next_segment = (int)Math.ceil(NUM_LEDS / 2.0) + 1;
         } else {
             //should never happen
             Log.d("CM", "ERROR: unknown id string: " + id_string);
         }
-        led_end = (int) Math.round(led_start + segmentsize);
+        led_end = (int) (Math.round(led_start + segmentsize));
+        Log.d("CM", ""+led_end);
         if(led_end != start_next_segment){
             led_end += 1;
             Log.d("CM", "end: " + led_end + " / start next segment: " + start_next_segment);
         }
-        // shift ids by 1 as required by hardware
-        for (int i = led_start+1; i <= led_end; i++) {
-            if(i==90)
-                i=0;
+        for (int i = led_start; i < led_end; i++) {
+
             ((MainActivity) getActivity()).send_config("setpixel:" + i + " " + Color.red(color) +
                     " " + Color.green(color) + " " + Color.blue(color) + "\n");
-            if (i==0)
-                break;
         }
     }
 
