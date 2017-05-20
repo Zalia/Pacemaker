@@ -21,6 +21,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import static android.R.attr.offset;
 import static zalia.pacemaker.MainActivity.CREATIVE;
 
 
@@ -136,47 +137,69 @@ public class CreativeMode extends PacemakerMode {
     }
 
     //set all leds that correspond to the current Button
-    //this implementation is maximized for chaos and should either
-    //a) never be touched or
-    //b) rewritten completely
+    //this method is very tailored towards the hardware and cannot be adjusted dynamically
     private void color_segment(int id, int color) {
         String id_string = getResources().getResourceName(id);
         id_string = id_string.split("/")[1];
-        int led_start = 0;
-        int led_end;
-        int start_next_segment = 0;
-        double segmentsize = (double) NUM_LEDS / (double) num_buttons;
-        if (id_string.equals("buttonT")) {
-            led_start = 0;
-            start_next_segment = (int) Math.round(1.0 * segmentsize);
-        } else if (id_string.contains("L")) {
-            led_start = (int) Math.round((double) Integer.parseInt(id_string.substring(7)) * segmentsize);
-            start_next_segment = (int) Math.round((double) (Integer.parseInt(id_string.substring(7)) + 1) * segmentsize);
-            if(start_next_segment == (int) Math.round((num_buttons / 2.0) * segmentsize))
-                start_next_segment -= 1;
-        } else if (id_string.contains("R")) {
-            led_start = (int) Math.round(((num_buttons / 2.0) * segmentsize) + //left side buttons and top button
-                    //since my numbering pattern starts at the top, but the led strip wraps around the
-                    //bottom and starts from there, the button id has to be inverted
-                    Math.round(((num_buttons / 2.0)) - (double) Integer.parseInt(id_string.substring(7))) * segmentsize);
-            start_next_segment = (int) Math.round(((num_buttons / 2.0) * segmentsize) + Math.round(((num_buttons / 2.0)) - (double) (Integer.parseInt(id_string.substring(7)) - 1)) * segmentsize);
-            if(led_start == (int) Math.ceil(NUM_LEDS / 2.0) + 2)
-                led_start -= 1;
-        } else if (id_string.equals("buttonB")) {
-            led_start = (int) Math.round((num_buttons / 2.0) * segmentsize) - 1; //45
-            start_next_segment = (int) Math.ceil(NUM_LEDS / 2.0) + 1; //47
+        int led_start = 0, led_end = 0;
+        if (id_string.equals("buttonTOP")) { //the middle led, the non-existing logical led and the corresponding last led on the other side
+            led_start = 90;
+            led_end = 1;
+        } else if(id_string.equals("buttonBOT")) { //two bottom leds
+            led_start = 45;
+            led_end = 46;
         } else {
-            //should never happen
-            Log.d("CM", "ERROR: unknown id string: " + id_string);
+            int button_id = Integer.parseInt(id_string.substring(7));
+            int offset;
+            if (id_string.contains("R")) {
+                button_id += 1; // we need to add one, so that the tripple LED segments are symmetrical
+                offset = 47 - 2; // -> subtract one segment for correct LED IDs
+            } else {
+                offset = 2;
+            }
+            switch(button_id) {
+                case 5:
+                    led_end = offset + 2 * button_id + 2; //topmost regular tripple led segment
+                case 0:
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                    led_start = offset + 2 * button_id; //segments of 2 leds from 0 to 4
+                    break;
+                case 10:
+                    led_end = offset + 1 + 2 * button_id + 2; //middle tripple led segment
+                case 6:
+                case 7:
+                case 8:
+                case 9:
+                    led_start = offset + 1 + 2 * button_id; //segments of 2 leds from 6 to 9 with additional offset of 1
+                    break;
+                case 15:
+                    led_end = offset + 2 + 2 * button_id + 2; //bottom tripple led segment
+                case 11:
+                case 12:
+                case 13:
+                case 14:
+                    led_start = offset + 2 + 2 * button_id; //segments of 2 leds from 11 to 14 with additional offset of 2
+                    break;
+                case 16:
+                case 17:
+                case 18:
+                case 19:
+                case 20: //we need this for the right side because we increased all segmetn ids by 1
+                    led_start = offset + 3 + 2 * button_id; //segments of 2 leds from 16 to 19
+                    break;
+            }
+            if(led_end == 0)
+                led_end = led_start + 1;
         }
-        led_end = (int) (Math.round(led_start + segmentsize));
-        Log.d("CM", ""+led_end);
-        if(led_end != start_next_segment){
-            Log.d("CM", "end: " + led_end + " / start next segment: " + start_next_segment);
-            led_end += 1;
+        if(led_start == 90){ //exception for the top middle segment
+            ((MainActivity) getActivity()).send_config("setpixel:" + 90 + " " + Color.red(color) +
+                    " " + Color.green(color) + " " + Color.blue(color) + "\n");
+            led_start = 0;
         }
-        for (int i = led_start; i < led_end; i++) {
-
+        for (int i = led_start; i <= led_end; i++) {
             ((MainActivity) getActivity()).send_config("setpixel:" + i + " " + Color.red(color) +
                     " " + Color.green(color) + " " + Color.blue(color) + "\n");
         }

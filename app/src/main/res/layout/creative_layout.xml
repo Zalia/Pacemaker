@@ -19,7 +19,7 @@
 
     <!--marker button top center-->
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/buttonT"
+        android:id="@+id/buttonTOP"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:background="@drawable/round_button"
@@ -29,14 +29,14 @@
     <!--marginStart(rechts) = 252 - marginStart(links)-->
 
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/buttonL1"
+        android:id="@+id/buttonL0"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:background="@drawable/round_button"
         android:layout_marginTop="9dp"
         android:layout_marginStart="111dp"/>
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/buttonR1"
+        android:id="@+id/buttonR19"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:background="@drawable/round_button"
@@ -44,14 +44,14 @@
         android:layout_marginStart="141dp"/>
 
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/buttonL2"
+        android:id="@+id/buttonL1"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:background="@drawable/round_button"
         android:layout_marginTop="2dp"
         android:layout_marginStart="92dp"/>
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/buttonR2"
+        android:id="@+id/buttonR18"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:background="@drawable/round_button"
@@ -73,14 +73,14 @@
         <!--android:layout_marginStart="168dp"/>-->
 
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/buttonL3"
+        android:id="@+id/buttonL2"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:background="@drawable/round_button"
         android:layout_marginTop="0dp"
         android:layout_marginStart="73dp"/>
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/buttonR3"
+        android:id="@+id/buttonR17"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:background="@drawable/round_button"
@@ -88,14 +88,14 @@
         android:layout_marginStart="179dp"/>
 
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/buttonL4"
+        android:id="@+id/buttonL3"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:background="@drawable/round_button"
         android:layout_marginTop="2dp"
         android:layout_marginStart="55dp"/>
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/buttonR4"
+        android:id="@+id/buttonR16"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:background="@drawable/round_button"
@@ -103,14 +103,14 @@
         android:layout_marginStart="197dp"/>
 
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/buttonL5"
+        android:id="@+id/buttonL4"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:background="@drawable/round_button"
         android:layout_marginTop="10dp"
         android:layout_marginStart="37dp"/>
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/buttonR5"
+        android:id="@+id/buttonR15"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:background="@drawable/round_button"
@@ -118,14 +118,14 @@
         android:layout_marginStart="215dp"/>
 
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/buttonL6"
+        android:id="@+id/buttonL5"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:background="@drawable/round_button"
         android:layout_marginTop="23dp"
         android:layout_marginStart="22dp"/>
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/buttonR6"
+        android:id="@+id/buttonR14"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:background="@drawable/round_button"
@@ -133,14 +133,14 @@
         android:layout_marginStart="230dp"/>
 
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/buttonL7"
+        android:id="@+id/buttonL6"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:background="@drawable/round_button"
         android:layout_marginTop="39dp"
         android:layout_marginStart="11dp"/>
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/buttonR7"
+        android:id="@+id/buttonR13"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:background="@drawable/round_button"
@@ -148,14 +148,14 @@
         android:layout_marginStart="241dp"/>
 
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/buttonL8"
+        android:id="@+id/buttonL7"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:background="@drawable/round_button"
         android:layout_marginTop="56dp"
         android:layout_marginStart="4dp"/>
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/buttonR8"
+        android:id="@+id/buttonR12"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:background="@drawable/round_button"
@@ -163,19 +163,34 @@
         android:layout_marginStart="248dp"/>
 
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/buttonL9"
+        android:id="@+id/buttonL8"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:background="@drawable/round_button"
         android:layout_marginTop="74dp"
         android:layout_marginStart="1dp"/>
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/buttonR9"
+        android:id="@+id/buttonR11"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:background="@drawable/round_button"
         android:layout_marginTop="74dp"
         android:layout_marginStart="251dp"/>
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/buttonL9"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:background="@drawable/round_button"
+        android:layout_marginTop="92dp"
+        android:layout_marginStart="3dp"/>
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/buttonR10"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:background="@drawable/round_button"
+        android:layout_marginTop="92dp"
+        android:layout_marginStart="249dp"/>
 
     <!--marker buttons center left and center right-->
     <!--<android.support.v7.widget.AppCompatButton-->
@@ -196,25 +211,10 @@
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:background="@drawable/round_button"
-        android:layout_marginTop="92dp"
-        android:layout_marginStart="3dp"/>
-    <android.support.v7.widget.AppCompatButton
-        android:id="@+id/buttonR10"
-        android:layout_width="16dp"
-        android:layout_height="16dp"
-        android:background="@drawable/round_button"
-        android:layout_marginTop="92dp"
-        android:layout_marginStart="249dp"/>
-
-    <android.support.v7.widget.AppCompatButton
-        android:id="@+id/buttonL11"
-        android:layout_width="16dp"
-        android:layout_height="16dp"
-        android:background="@drawable/round_button"
         android:layout_marginTop="110dp"
         android:layout_marginStart="8dp"/>
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/buttonR11"
+        android:id="@+id/buttonR9"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:background="@drawable/round_button"
@@ -222,14 +222,14 @@
         android:layout_marginStart="244dp"/>
 
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/buttonL12"
+        android:id="@+id/buttonL11"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:background="@drawable/round_button"
         android:layout_marginTop="127dp"
         android:layout_marginStart="15dp"/>
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/buttonR12"
+        android:id="@+id/buttonR8"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:background="@drawable/round_button"
@@ -237,14 +237,14 @@
         android:layout_marginStart="237dp"/>
 
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/buttonL13"
+        android:id="@+id/buttonL12"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:background="@drawable/round_button"
         android:layout_marginTop="144dp"
         android:layout_marginStart="24dp"/>
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/buttonR13"
+        android:id="@+id/buttonR7"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:background="@drawable/round_button"
@@ -252,14 +252,14 @@
         android:layout_marginStart="228dp"/>
 
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/buttonL14"
+        android:id="@+id/buttonL13"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:background="@drawable/round_button"
         android:layout_marginTop="160dp"
         android:layout_marginStart="35dp"/>
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/buttonR14"
+        android:id="@+id/buttonR6"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:background="@drawable/round_button"
@@ -267,14 +267,14 @@
         android:layout_marginStart="217dp"/>
 
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/buttonL15"
+        android:id="@+id/buttonL14"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:background="@drawable/round_button"
         android:layout_marginTop="175dp"
         android:layout_marginStart="47dp"/>
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/buttonR15"
+        android:id="@+id/buttonR5"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:background="@drawable/round_button"
@@ -282,14 +282,14 @@
         android:layout_marginStart="205dp"/>
 
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/buttonL16"
+        android:id="@+id/buttonL15"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:background="@drawable/round_button"
         android:layout_marginTop="190dp"
         android:layout_marginStart="59dp"/>
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/buttonR16"
+        android:id="@+id/buttonR4"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:background="@drawable/round_button"
@@ -297,14 +297,14 @@
         android:layout_marginStart="193dp"/>
 
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/buttonL17"
+        android:id="@+id/buttonL16"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:background="@drawable/round_button"
         android:layout_marginTop="204dp"
         android:layout_marginStart="71dp"/>
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/buttonR17"
+        android:id="@+id/buttonR3"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:background="@drawable/round_button"
@@ -312,14 +312,14 @@
         android:layout_marginStart="181dp"/>
 
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/buttonL18"
+        android:id="@+id/buttonL17"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:background="@drawable/round_button"
         android:layout_marginTop="218dp"
         android:layout_marginStart="85dp"/>
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/buttonR18"
+        android:id="@+id/buttonR2"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:background="@drawable/round_button"
@@ -327,14 +327,14 @@
         android:layout_marginStart="167dp"/>
 
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/buttonL19"
+        android:id="@+id/buttonL18"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:background="@drawable/round_button"
         android:layout_marginTop="232dp"
         android:layout_marginStart="99dp"/>
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/buttonR19"
+        android:id="@+id/buttonR1"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:background="@drawable/round_button"
@@ -342,14 +342,14 @@
         android:layout_marginStart="153dp"/>
 
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/buttonL20"
+        android:id="@+id/buttonL19"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:background="@drawable/round_button"
         android:layout_marginTop="245dp"
         android:layout_marginStart="112dp"/>
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/buttonR20"
+        android:id="@+id/buttonR0"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:background="@drawable/round_button"
@@ -358,7 +358,7 @@
 
     <!--marker button bottom center-->
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/buttonB"
+        android:id="@+id/buttonBOT"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:background="@drawable/round_button"
