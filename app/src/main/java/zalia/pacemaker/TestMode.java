@@ -111,7 +111,7 @@ public class TestMode extends PacemakerMode {
         }
     }
 
-    protected int getID(){
+    protected int getID() {
         return ID;
     }
 

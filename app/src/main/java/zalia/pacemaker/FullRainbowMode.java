@@ -6,7 +6,6 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatCheckBox;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -127,7 +126,7 @@ public class FullRainbowMode extends PacemakerMode {
         if (split.equals("split:")) {
             split_box.setChecked(true);
             split_box.jumpDrawablesToCurrentState();
-            Log.d("FCM", "setting split checked: " + split_box.isChecked());
+            //Log.d("FCM", "setting split checked: " + split_box.isChecked());
         }
         change_background();
     }
@@ -188,7 +187,7 @@ public class FullRainbowMode extends PacemakerMode {
         }
     }
 
-    protected int getID(){
+    protected int getID() {
         return ID;
     }
 

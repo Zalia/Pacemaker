@@ -2,7 +2,6 @@ package zalia.pacemaker;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -91,7 +90,7 @@ public class ColorPickerMode extends PacemakerMode {
         }
     }
 
-    protected int getID(){
+    protected int getID() {
         return ID;
     }
 }

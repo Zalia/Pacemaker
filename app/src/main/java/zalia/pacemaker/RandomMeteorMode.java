@@ -124,7 +124,7 @@ public class RandomMeteorMode extends PacemakerMode {
         }
     }
 
-    protected int getID(){
+    protected int getID() {
         return ID;
     }
 }

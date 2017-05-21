@@ -21,7 +21,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import static android.R.attr.offset;
 import static zalia.pacemaker.MainActivity.CREATIVE;
 
 
@@ -145,7 +144,7 @@ public class CreativeMode extends PacemakerMode {
         if (id_string.equals("buttonTOP")) { //the middle led, the non-existing logical led and the corresponding last led on the other side
             led_start = 90;
             led_end = 1;
-        } else if(id_string.equals("buttonBOT")) { //two bottom leds
+        } else if (id_string.equals("buttonBOT")) { //two bottom leds
             led_start = 45;
             led_end = 46;
         } else {
@@ -157,7 +156,7 @@ public class CreativeMode extends PacemakerMode {
             } else {
                 offset = 2;
             }
-            switch(button_id) {
+            switch (button_id) {
                 case 5:
                     led_end = offset + 2 * button_id + 2; //topmost regular tripple led segment
                 case 0:
@@ -191,10 +190,10 @@ public class CreativeMode extends PacemakerMode {
                     led_start = offset + 3 + 2 * button_id; //segments of 2 leds from 16 to 19
                     break;
             }
-            if(led_end == 0)
+            if (led_end == 0)
                 led_end = led_start + 1;
         }
-        if(led_start == 90){ //exception for the top middle segment
+        if (led_start == 90) { //exception for the top middle segment
             ((MainActivity) getActivity()).send_config("setpixel:" + 90 + " " + Color.red(color) +
                     " " + Color.green(color) + " " + Color.blue(color) + "\n");
             led_start = 0;
@@ -228,14 +227,14 @@ public class CreativeMode extends PacemakerMode {
                 //this code snippet should not be needed, but better be safe than sorry
                 if (button_colors.get(bid) == null) {
                     String id_string = getResources().getResourceName(bid);
-                    Log.d("CM", "loading of color for " + id_string + " failed, replacing with default color");
+                    //Log.d("CM", "loading of color for " + id_string + " failed, replacing with default color");
                     button_colors.put(bid, Color.rgb(204, 65, 36));
                 }
             }
         }
     }
 
-    protected int getID(){
+    protected int getID() {
         return ID;
     }
 }

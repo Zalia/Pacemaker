@@ -16,7 +16,6 @@ import android.os.ParcelUuid;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -76,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "in onCreate() ...");
+        //Log.d(TAG, "in onCreate() ...");
         setContentView(R.layout.activity_main);
 
         //attempt to restore old config map
@@ -95,13 +94,13 @@ public class MainActivity extends AppCompatActivity {
                     starting_mode = configs.get(MAIN).getIval1(); //defaults to 0 automatically
                 }
             } catch (IOException e) {
-                Log.e(TAG, "Could not load configs from file, loading default.");
+                //Log.e(TAG, "Could not load configs from file, loading default.");
                 configs = new HashMap<>();
             } catch (ClassNotFoundException i) {
-                Log.e(TAG, "HashMap class not found");
+                //Log.e(TAG, "HashMap class not found");
             }
         } catch (FileNotFoundException e) {
-            Log.d(TAG, "Could not find configs file, loading default.");
+            //Log.d(TAG, "Could not find configs file, loading default.");
             configs = new HashMap<>();
         }
 
@@ -165,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
             toast("Fatal Error: Bluetooth Not supported. Aborting.");
         } else {
             if (btAdapter.isEnabled()) {
-                Log.d(TAG, "Bluetooth is enabled");
+                //Log.d(TAG, "Bluetooth is enabled");
                 if (heartbeat_mac != null) {
                     bt_connect();
                 } else {
@@ -183,33 +182,33 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d(TAG, "in onPause() ...");
+        //Log.d(TAG, "in onPause() ...");
         try {
             btAdapter.cancelDiscovery();
         } catch (Exception e) {
-            Log.e(TAG, "Exception while attempting to cancel discovery. It propably was not active in which case everything is fine.");
+            //Log.e(TAG, "Exception while attempting to cancel discovery. It propably was not active in which case everything is fine.");
         }
         try {
             discovered_dialog.dismiss();
         } catch (NullPointerException npe) {
-            Log.e(TAG, "Exception while attempting to dismiss discovery dialog. It propably was not active in which case everything is fine.");
+            //Log.e(TAG, "Exception while attempting to dismiss discovery dialog. It propably was not active in which case everything is fine.");
         }
         try {
             paired_dialog.dismiss();
         } catch (Exception e) {
-            Log.e(TAG, "Exception while attempting to dismiss paired devices dialog. It propably was not active in which case everything is fine.");
+            //Log.e(TAG, "Exception while attempting to dismiss paired devices dialog. It propably was not active in which case everything is fine.");
         }
         try {
             progress.dismiss();
         } catch (Exception e) {
-            Log.e(TAG, "Exception while attempting to dismiss processing dialog. It propably was not active in which case everything is fine.");
+            //Log.e(TAG, "Exception while attempting to dismiss processing dialog. It propably was not active in which case everything is fine.");
         }
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        Log.d(TAG, "in onStop() ...");
+        //Log.d(TAG, "in onStop() ...");
 
         //store active configs
         PacemakerModeConfig active_conf = active_mode.store_configs();
@@ -217,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
 
         //store active mode
         PacemakerModeConfig main_conf;
-        if(configs.containsKey(MAIN)){
+        if (configs.containsKey(MAIN)) {
             main_conf = configs.get(MAIN);
         } else {
             main_conf = new PacemakerModeConfig(MAIN);
@@ -233,63 +232,63 @@ public class MainActivity extends AppCompatActivity {
             objOut.writeObject(configs);
             objOut.close();
             fileOut.close();
-            Log.d(TAG, "Successfully saved configs");
+            //Log.d(TAG, "Successfully saved configs");
         } catch (IOException i) {
-            Log.e(TAG, "Could not save configs");
+            //Log.e(TAG, "Could not save configs");
         }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG, "in onResume() ...");
+        //Log.d(TAG, "in onResume() ...");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "in onDestroy() ...");
+        //Log.d(TAG, "in onDestroy() ...");
         try {
             unregisterReceiver(bt_scan_receiver);
         } catch (Exception e) {
-            Log.e(TAG, "Failed to unregister Bluetooth Scan receiver. It propably was not active in which case everything is fine.");
+            //Log.e(TAG, "Failed to unregister Bluetooth Scan receiver. It propably was not active in which case everything is fine.");
         }
         try {
             btAdapter.cancelDiscovery();
         } catch (Exception e) {
-            Log.e(TAG, "Exception while attempting to cancel discovery. It propably was not active in which case everything is fine.");
+            //Log.e(TAG, "Exception while attempting to cancel discovery. It propably was not active in which case everything is fine.");
         }
         try {
             discovered_dialog.dismiss();
         } catch (NullPointerException npe) {
-            Log.e(TAG, "Exception while attempting to dismiss discovery dialog. It propably was not active in which case everything is fine.");
+            //Log.e(TAG, "Exception while attempting to dismiss discovery dialog. It propably was not active in which case everything is fine.");
         }
         try {
             paired_dialog.dismiss();
         } catch (Exception e) {
-            Log.e(TAG, "Exception while attempting to dismiss paired devices dialog. It propably was not active in which case everything is fine.");
+            //Log.e(TAG, "Exception while attempting to dismiss paired devices dialog. It propably was not active in which case everything is fine.");
         }
         try {
             progress.dismiss();
         } catch (Exception e) {
-            Log.e(TAG, "Exception while attempting to dismiss processing dialog. It propably was not active in which case everything is fine.");
+            //Log.e(TAG, "Exception while attempting to dismiss processing dialog. It propably was not active in which case everything is fine.");
         }
     }
 
     //handle results from bluetooth activation prompt and initiate connection if possible
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d(TAG, "in onActivityResult() ...");
+        //Log.d(TAG, "in onActivityResult() ...");
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_ENABLE_BT) {
             if (resultCode == 0) {
                 // If the resultCode is 0, the user selected "No" when prompt to
                 // allow the app to enable bluetooth.
-                Log.d(TAG, "User declined bluetooth access!");
+                //Log.d(TAG, "User declined bluetooth access!");
                 enableConnect();
             } else {
-                Log.d(TAG, "User allowed bluetooth access!");
+                //Log.d(TAG, "User allowed bluetooth access!");
                 if (heartbeat_mac != null) {
                     bt_connect();
                 } else {
@@ -320,12 +319,12 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         discovered_dialog.dismiss();
                     } catch (NullPointerException npe) {
-                        Log.e(TAG, "Exception while attempting to dismiss discovery dialog. It propably was not active in which case everything is fine.");
+                        //Log.e(TAG, "Exception while attempting to dismiss discovery dialog. It propably was not active in which case everything is fine.");
                     }
                     try {
                         paired_dialog.dismiss();
                     } catch (Exception e) {
-                        Log.e(TAG, "Exception while attempting to dismiss paired devices dialog. It propably was not active in which case everything is fine.");
+                        //Log.e(TAG, "Exception while attempting to dismiss paired devices dialog. It propably was not active in which case everything is fine.");
                     }
                     //toggle button
                     disableConnect();
@@ -352,7 +351,7 @@ public class MainActivity extends AppCompatActivity {
     //connection attempt to the device corresponding to the mac stored in heartbeat_mac
     private boolean bt_connect_inner() {
         try {
-            Log.d(TAG, "Attempting client connect...");
+            //Log.d(TAG, "Attempting client connect...");
 
             // Set up a pointer to the remote node using it's address.
             BluetoothDevice device = btAdapter.getRemoteDevice(heartbeat_mac);
@@ -363,14 +362,14 @@ public class MainActivity extends AppCompatActivity {
             try {
                 btSocket = device.createRfcommSocketToServiceRecord(HEARTBEAT_UUID);
             } catch (IOException e) {
-                Log.e(TAG, "Fatal Error: Failed to create BT socket: " + e.getMessage() + ".");
+                //Log.e(TAG, "Fatal Error: Failed to create BT socket: " + e.getMessage() + ".");
                 return false;
             }
 
-            Log.d(TAG, "Connecting to Remote...");
+            //Log.d(TAG, "Connecting to Remote...");
             try {
                 btSocket.connect();
-                Log.d(TAG, "Connection established and data link opened...");
+                //Log.d(TAG, "Connection established and data link opened...");
 
 
             } catch (IOException e) {
@@ -378,22 +377,22 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     btSocket.close();
                 } catch (IOException e2) {
-                    Log.e(TAG, "Fatal Error: Unable to close socket during connection failure: " + e2.getMessage() + ".");
+                    //Log.e(TAG, "Fatal Error: Unable to close socket during connection failure: " + e2.getMessage() + ".");
                 }
                 return false;
             }
 
             // Create a data stream so we can talk to server.
-            Log.d(TAG, "Creating Socket...");
+            //Log.d(TAG, "Creating Socket...");
 
             try {
                 outStream = btSocket.getOutputStream();
             } catch (IOException e) {
-                Log.e(TAG, "Fatal Error: Output stream creation failed: " + e.getMessage() + ".");
+                //Log.e(TAG, "Fatal Error: Output stream creation failed: " + e.getMessage() + ".");
                 return false;
             }
         } catch (NullPointerException e) {
-            Log.w(TAG, "Warning: Bluetooth not active/supported or connection broken");
+            //Log.w(TAG, "Warning: Bluetooth not active/supported or connection broken");
         }
         return true;
     }
@@ -401,7 +400,7 @@ public class MainActivity extends AppCompatActivity {
     //get all known bt devices, compile them into a list and display a dialog
     private void bt_show_paired_devices() {
 
-        Log.d(TAG, "Showing list of paired devices...");
+        //Log.d(TAG, "Showing list of paired devices...");
         List<String> arrayOfAlreadyPairedBTDevices = null;
         // Query paired devices
         Set<BluetoothDevice> pairedDevices = btAdapter.getBondedDevices();
@@ -423,7 +422,7 @@ public class MainActivity extends AppCompatActivity {
                     if (compatible) {
                         arrayOfAlreadyPairedBTDevices.add(device.getName() + " / " + device.getAddress());
                     } else {
-                        Log.d(TAG, "Found incompatible device in list of known bluetooth devices.");
+                        //Log.d(TAG, "Found incompatible device in list of known bluetooth devices.");
                     }
                 } else {
                     arrayOfAlreadyPairedBTDevices.add(device.getName() + " / " + device.getAddress());
@@ -481,7 +480,7 @@ public class MainActivity extends AppCompatActivity {
                 // When discovery finds a device
                 if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                     progress.dismiss();
-                    Log.d(TAG, "Finished Bluetooth discovery and found " + arrayOfFoundBTDevices.size() + " devices");
+                    //Log.d(TAG, "Finished Bluetooth discovery and found " + arrayOfFoundBTDevices.size() + " devices");
                     final CharSequence[] found_devices = arrayOfFoundBTDevices.toArray(new String[arrayOfFoundBTDevices.size()]);
                     AlertDialog.Builder builder = new AlertDialog.Builder(context)
                             .setTitle("Gefundene Geräte:")
@@ -527,10 +526,10 @@ public class MainActivity extends AppCompatActivity {
                     }
                     if (ONLY_SHOW_HEARTBEAT_DEVICES) {
                         if (compatible) {
-                            Log.d(TAG, "Found compatible Bluetooth device during discovery! Expanding list to " + arrayOfFoundBTDevices.size() + " devices.");
+                            //Log.d(TAG, "Found compatible Bluetooth device during discovery! Expanding list to " + arrayOfFoundBTDevices.size() + " devices.");
                             arrayOfFoundBTDevices.add(device.getName() + " / " + device.getAddress());
                         } else {
-                            Log.d(TAG, "Found incompatible Bluetooth device during discovery.");
+                            //Log.d(TAG, "Found incompatible Bluetooth device during discovery.");
                         }
                     } else {
                         arrayOfFoundBTDevices.add(device.getName() + " / " + device.getAddress());
@@ -552,7 +551,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void bt_discover() {
         // start looking for bluetooth devices
-        Log.d(TAG, "Discovering new Bluetooth devices...");
+        //Log.d(TAG, "Discovering new Bluetooth devices...");
         arrayOfFoundBTDevices = new ArrayList<String>();
         progress = ProgressDialog.show(this, "Bluetooth Entdeckung", "Kompatible Geräte in der Nähe werden gesucht..", true);
         btAdapter.startDiscovery();
@@ -597,7 +596,7 @@ public class MainActivity extends AppCompatActivity {
 
     //send the config string of the currently active PacemakerMode via bluetooth to the heartbeat device
     protected void send_config(String config) {
-        Log.d(TAG, "Generated config: '" + config.trim() + "'");
+        //Log.d(TAG, "Generated config: '" + config.trim() + "'");
         if (btSocket != null) {
             try {
                 byte[] msgBuffer = config.getBytes();
@@ -632,7 +631,7 @@ public class MainActivity extends AppCompatActivity {
 
     //display debug mesages on the device
     protected void toast(String text) {
-        Log.d("Toast", text);
+        //Log.d("Toast", text);
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
 

@@ -137,7 +137,7 @@ public class FadingMode extends ColorPickerMode {
     }
 
     @Override
-    protected int getID(){
+    protected int getID() {
         return ID;
     }
 }
