@@ -6,6 +6,7 @@ To install, simply download Pacemaker.apk onto your phone and execute it.
 # Release History
 
 21.05.2017 - Project internal release of version 1.0
+
 27.05.2017 - Official release
 
 # Bonus material
