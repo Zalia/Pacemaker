@@ -17,3 +17,4 @@ The following files not directly associated with the app itself can be found in 
 * A pdn Paint.NET file and a corresponding png with the current 2D design
 * A pdn Paint.NET file of the launcher icon
 * A variation of the launcher icon (originally intended as profile picture for the Telegram HeartbeatBot)
+* A folder that contains a promo flyer (intended for A5 or A4 format) and a promo card (intended to fold from A5 into A6) both of which show a QR code for easy app installation
